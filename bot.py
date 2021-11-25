@@ -567,8 +567,6 @@ def f(query):
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
 
-bot.polling()
-
 
 
 @server.route('/' + '2126267694:AAGLg0fY8kw4oFYt5T0vSWKeM39MtV6kYV8', methods=['POST'])
@@ -580,7 +578,7 @@ def getMessage():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://words-and-boats.herokuapp.com/' + '2126267694:AAGLg0fY8kw4oFYt5T0vSWKeM39MtV6kYV8')
+    bot.set_webhook(url='https://planes-bot.herokuapp.com/' + '2126267694:AAGLg0fY8kw4oFYt5T0vSWKeM39MtV6kYV8')
     return "!", 200
 
 if __name__ == '__main__':
