@@ -502,16 +502,22 @@ def answer(message):
 def create_word(message):
     try:
         for i in message.text.split():
+            print('создание карточки')
             photo, new_line = word(i, str(message.chat.id))
             if not '?' in i:
+                print('слхранение')
                 photo.save(i + '.png')
+                print('коткрывание')
                 photo = open(i + '.png', 'rb')
             else:
                 i = 'poop'
                 photo.save(i + '.png')
                 photo = open(i + '.png', 'rb')
+            print('отпр')
             bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
+            print('закрываем')
             photo.close()
+            print('удаляем')
             os.remove(i + '.png')
             bot.send_message(chat_id=599040955, text=i)
     except:
