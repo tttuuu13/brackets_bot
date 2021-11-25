@@ -568,6 +568,7 @@ def f(query):
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
 
 
+bot.polling()
 
 @server.route('/' + '2126267694:AAGLg0fY8kw4oFYt5T0vSWKeM39MtV6kYV8', methods=['POST'])
 def getMessage():
