@@ -570,6 +570,7 @@ def f(query):
 
 bot.polling()
 
+"""
 @server.route('/' + '2126267694:AAGLg0fY8kw4oFYt5T0vSWKeM39MtV6kYV8', methods=['POST'])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
@@ -585,3 +586,4 @@ def webhook():
 if __name__ == '__main__':
     server.debug = True
     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+"""
