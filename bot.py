@@ -522,7 +522,8 @@ def create_word(message):
             print('удаляем')
             os.remove(i + '.png')
             bot.send_message(chat_id=599040955, text=i)
-    except Exception as e: print(e):
+    except Exception as e:
+        print(e)
         bot.send_message(chat_id=message.chat.id, text='Произошла ошибка, проверьте отсутствие недопустимых знаков знаков')
         print('word error')
 
