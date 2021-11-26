@@ -72,7 +72,8 @@ def word(word, id):
             else:
                 img = Image.open('Буквы/' + char.upper() + '.png')
             width, height = img.size
-        except:
+        except Exception as e:
+            print(e)
             pass
         print('ресайз')
         if char == char.upper():
