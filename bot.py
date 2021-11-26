@@ -41,7 +41,7 @@ def word(word, id):
     chars = []
     new_line = False
     
-    print('преференсес')
+    
     with open("preferences.txt", "r") as f:
         data = ast.literal_eval(f.read())
     try:
@@ -56,7 +56,6 @@ def word(word, id):
             boat = boat_4
     except:
         boat = boat_1
-    print('открываем изображения')
     for char in word:
         try:
             if char == '?':
@@ -75,7 +74,6 @@ def word(word, id):
         except Exception as e:
             print(e)
             pass
-        print('ресайз')
         if char == char.upper():
             if char == 'Ё':
                 img = img.resize((320 * width // height, 320), Image.ANTIALIAS)
@@ -236,7 +234,6 @@ def word(word, id):
                 widths.append(width)
                 chars.append(img)
                 continue
-    print('вставляем')
     bg = Image.new('RGB', (width_total, 600), 'white')
     x = 40
     index = 0
@@ -284,7 +281,6 @@ def word(word, id):
     drop_y = 380
     boat_y = 340
     
-    print('самолетики и звездочки')
     index = 0
     while index < len(word):
         if word[index].lower() in a:
@@ -314,7 +310,6 @@ def word(word, id):
                 index += 1
         else:
             index += 1
-    print('готово')
     return bg, new_line
 
 
@@ -505,22 +500,19 @@ def answer(message):
 def create_word(message):
     try:
         for i in message.text.split():
-            print('создание карточки')
             photo, new_line = word(i, str(message.chat.id))
             if not '?' in i:
-                print('слхранение')
                 photo.save(i + '.png')
-                print('коткрывание')
                 photo = open(i + '.png', 'rb')
             else:
                 i = 'poop'
                 photo.save(i + '.png')
                 photo = open(i + '.png', 'rb')
-            print('отпр')
+            
             bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
-            print('закрываем')
+            
             photo.close()
-            print('удаляем')
+            
             os.remove(i + '.png')
             bot.send_message(chat_id=599040955, text=i)
     except Exception as e:
