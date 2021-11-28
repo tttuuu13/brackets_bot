@@ -1112,10 +1112,10 @@ def g_text(text1, size, orientation, id):
             w = text_list[0]
         except:
             break
-        
+        with open('preferences.txt', 'r') as f:
+            data = ast.literal_eval(f.read())
         try:
-            with open('preferences.txt', 'r') as f:
-                w_type = ast.literal_eval(f.read())[str(id)]['word']
+            w_type == data[str(id)]['word']
             if w_type == '1':
                 img, new_line = word(w, id)
             elif w_type == '2':
