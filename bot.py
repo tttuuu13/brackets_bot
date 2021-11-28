@@ -1113,17 +1113,18 @@ def g_text(text1, size, orientation, id):
         except:
             break
         
-        with open('preferences.txt', 'r') as f:
-            w_type = ast.literal_eval(f.read())[str(id)]['word']
-        if w_type == '1':
-            img, new_line = word(w, id)
-        elif w_type == '2':
-            img, new_line = word_with_boats(w, id)
-        elif w_type == '3':
-            img, new_line = word_with_drops(w, id)
-        elif w_type == '4':
-            img, new_line = word_only(w, id)
-        else:
+        try:
+            with open('preferences.txt', 'r') as f:
+                w_type = ast.literal_eval(f.read())[str(id)]['word']
+            if w_type == '1':
+                img, new_line = word(w, id)
+            elif w_type == '2':
+                img, new_line = word_with_boats(w, id)
+            elif w_type == '3':
+                img, new_line = word_with_drops(w, id)
+            elif w_type == '4':
+                img, new_line = word_only(w, id)
+        except:
             img, new_line = word(w, id)
         
         img_width, img_height = img.size
