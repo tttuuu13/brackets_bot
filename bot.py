@@ -1364,7 +1364,7 @@ def f(query):
             w = data[str(query.message.chat.id)]['word']
             data[str(query.message.chat.id)] = {'word': w, 'plane': '1'}
         except:
-            data[str(query.message.chat.id)] = {'word': ' ', 'plane': '1'}
+            data[str(query.message.chat.id)] = {'word': '1', 'plane': '1'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1382,7 +1382,7 @@ def f(query):
             w = data[str(query.message.chat.id)]['word']
             data[str(query.message.chat.id)] = {'word': w, 'plane': '2'}
         except:
-            data[str(query.message.chat.id)] = {'word': ' ', 'plane': '2'}
+            data[str(query.message.chat.id)] = {'word': '1', 'plane': '2'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1399,7 +1399,7 @@ def f(query):
             w = data[str(query.message.chat.id)]['word']
             data[str(query.message.chat.id)] = {'word': w, 'plane': '3'}
         except:
-            data[str(query.message.chat.id)] = {'word': ' ', 'plane': '3'}
+            data[str(query.message.chat.id)] = {'word': '1', 'plane': '3'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1416,7 +1416,7 @@ def f(query):
             w = data[str(query.message.chat.id)]['word']
             data[str(query.message.chat.id)] = {'word': w, 'plane': '4'}
         except:
-            data[str(query.message.chat.id)] = {'word': ' ', 'plane': '4'}
+            data[str(query.message.chat.id)] = {'word': '1', 'plane': '4'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1433,7 +1433,7 @@ def f(query):
             p = data[str(query.message.chat.id)]['plane']
             data[str(query.message.chat.id)] = {'word': '1', 'plane': p}
         except:
-            data[str(query.message.chat.id)] = {'word': '1', 'plane': ' '}
+            data[str(query.message.chat.id)] = {'word': '1', 'plane': '1'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1450,7 +1450,7 @@ def f(query):
             p = data[str(query.message.chat.id)]['plane']
             data[str(query.message.chat.id)] = {'word': '2', 'plane': p}
         except:
-            data[str(query.message.chat.id)] = {'word': '2', 'plane': ' '}
+            data[str(query.message.chat.id)] = {'word': '2', 'plane': '1'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1467,7 +1467,7 @@ def f(query):
             p = data[str(query.message.chat.id)]['plane']
             data[str(query.message.chat.id)] = {'word': '3', 'plane': p}
         except:
-            data[str(query.message.chat.id)] = {'word': '3', 'plane': ' '}
+            data[str(query.message.chat.id)] = {'word': '3', 'plane': '1'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1484,7 +1484,7 @@ def f(query):
             p = data[str(query.message.chat.id)]['plane']
             data[str(query.message.chat.id)] = {'word': '4', 'plane': p}
         except:
-            data[str(query.message.chat.id)] = {'word': '4', 'plane': ' '}
+            data[str(query.message.chat.id)] = {'word': '4', 'plane': '1'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
