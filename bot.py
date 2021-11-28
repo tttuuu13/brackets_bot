@@ -44,8 +44,10 @@ def word(word, id):
     
     with open("preferences.txt", "r") as f:
         data = ast.literal_eval(f.read())
+        print(data)
     try:
         s = data[id]['plane']
+        print(s)
         if s == '1':
             boat = boat_1
         elif s == '2':
