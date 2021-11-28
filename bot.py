@@ -42,12 +42,9 @@ def word(word, id):
     chars = []
     new_line = False
     
-    with open("preferences.txt", "r") as f:
-        data = ast.literal_eval(f.read())
-        print(data)
     try:
-        s = data[id]['plane']
-        print(s)
+        with open("preferences.txt", "r") as f:
+            s = ast.literal_eval(f.read())[id]['plane']
         if s == '1':
             boat = boat_1
         elif s == '2':
@@ -1114,18 +1111,19 @@ def g_text(text1, size, orientation, id):
             w = text_list[0]
         except:
             break
-        with open('preferences.txt', 'r') as f:
-            data = ast.literal_eval(f.read())
+        
         try:
-            w_type == data[str(id)]['word']
+            with open('preferences.txt', 'r') as f:
+                w_type = ast.literal_eval(f.read())[str(id)]['word']
+            
             if w_type == '1':
-                img, new_line = word(w, id)
+                img, new_line = word(w, str(id))
             elif w_type == '2':
-                img, new_line = word_with_boats(w, id)
+                img, new_line = word_with_boats(w, str(id))
             elif w_type == '3':
-                img, new_line = word_with_drops(w, id)
+                img, new_line = word_with_drops(w, str(id))
             elif w_type == '4':
-                img, new_line = word_only(w, id)
+                img, new_line = word_only(w, str(id))
         except:
             img, new_line = word(w, id)
         
@@ -1488,7 +1486,6 @@ def f(query):
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
-
 
 
 @server.route('/' + '2126267694:AAGLg0fY8kw4oFYt5T0vSWKeM39MtV6kYV8', methods=['POST'])
