@@ -1321,6 +1321,10 @@ def create_word(message):
                 i = 'poop'
                 photo.save(i + '.png')
                 photo = open(i + '.png', 'rb')
+            bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
+            photo.close()
+            os.remove(i + '.png')
+            bot.send_message(chat_id=599040955, text=i)
     except:
         try:
             for i in message.text.split():
@@ -1332,14 +1336,13 @@ def create_word(message):
                 i = 'poop'
                 photo.save(i + '.png')
                 photo = open(i + '.png', 'rb')
+            bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
+            photo.close()
+            os.remove(i + '.png')
+            bot.send_message(chat_id=599040955, text=i)
         except:
             bot.send_message(chat_id=message.chat.id, text='Произошла ошибка, проверьте отсутствие недопустимых знаков')
             return
-
-    bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
-    photo.close()
-    os.remove(i + '.png')
-    bot.send_message(chat_id=599040955, text=i)
 
 @bot.callback_query_handler(lambda query: query.data == 'Выход')
 def exit_func(query):
