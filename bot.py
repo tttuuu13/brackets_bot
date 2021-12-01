@@ -1193,7 +1193,7 @@ def ask_size(message):
         return
     text1 = message.text
     text_queue[str(message.chat.id)].append(text1)
-    bot.send_message(chat_id=599040955, text=text1)
+    #bot.send_message(chat_id=599040955, text=text1)
     bot.send_message(chat_id=message.chat.id, text='Вы можете выбрать размер текста. Средний - 25. Отправьте просто число')
     bot.register_next_step_handler(message, ask_orientation)
 
@@ -1252,7 +1252,7 @@ def create_text(message):
         bot.delete_message(chat_id=message.chat.id, message_id=msg.id)
         bot.send_message(chat_id=message.chat.id, text='Произошла ошибка, попробуйте еще раз. В тексте допускаются знаки:\n!\n,\n?\n""\n_\n-\n.\n;\n:\n Заглавные и строчные буквы русского алфавита')
         bot.send_message(text='Возврат в меню...', chat_id=message.chat.id, reply_markup=start_menu)
-    bot.send_message(chat_id=599040955, text=str(text_queue))
+    #bot.send_message(chat_id=599040955, text=str(text_queue))
     photo.close()
     os.remove(text[:6] + '.png')
     del text_queue[str(message.chat.id)]
@@ -1323,7 +1323,7 @@ def create_word(message):
             bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
             photo.close()
             os.remove(i + '.png')
-            bot.send_message(chat_id=599040955, text=i)
+            #bot.send_message(chat_id=599040955, text=i)
     except:
         try:
             for i in message.text.split():
@@ -1337,7 +1337,7 @@ def create_word(message):
                 bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
                 photo.close()
                 os.remove(i + '.png')
-                bot.send_message(chat_id=599040955, text=i)
+                #bot.send_message(chat_id=599040955, text=i)
         except:
             bot.send_message(chat_id=message.chat.id, text='Произошла ошибка, проверьте отсутствие недопустимых знаков')
             return
