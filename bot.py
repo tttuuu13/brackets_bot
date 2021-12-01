@@ -1315,12 +1315,11 @@ def create_word(message):
             else:
                 photo, new_line = word(i, str(message.chat.id))
             if not '?' in i:
-                photo.save(i + '.png')
-                photo = open(i + '.png', 'rb')
+                pass
             else:
                 i = 'poop'
-                photo.save(i + '.png')
-                photo = open(i + '.png', 'rb')
+            photo.save(i + '.png')
+            photo = open(i + '.png', 'rb')
             bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
             photo.close()
             os.remove(i + '.png')
@@ -1330,12 +1329,11 @@ def create_word(message):
             for i in message.text.split():
                 photo, newline = word(i, str(message.chat.id))
             if not '?' in i:
-                photo.save(i + '.png')
-                photo = open(i + '.png', 'rb')
+                pass
             else:
                 i = 'poop'
-                photo.save(i + '.png')
-                photo = open(i + '.png', 'rb')
+            photo.save(i + '.png')
+            photo = open(i + '.png', 'rb')
             bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
             photo.close()
             os.remove(i + '.png')
