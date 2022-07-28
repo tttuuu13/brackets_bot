@@ -21,15 +21,16 @@ s_drop = s_drop.resize((62, 97))
 b_drop = Image.open('звезда.png')
 b_drop = b_drop.resize((126, 195))
 boat_1 = Image.open('самолет1.png')
-boat_2 = Image.open('самолет2.png')
-boat_3 = Image.open('самолет3.png')
-boat_4 = Image.open('самолет4.png')
+#boat_2 = Image.open('самолет2.png')
+#boat_3 = Image.open('самолет3.png')
+#boat_4 = Image.open('самолет4.png')
 
 start_menu = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True, one_time_keyboard=False)
 b1 = types.KeyboardButton(text='Ввести текст')
 b2 = types.KeyboardButton(text="Выбрать вид слов")
-b3 = types.KeyboardButton(text="Выбрать другую дугу")
-start_menu.add(b1, b2, b3)
+#b3 = types.KeyboardButton(text="Выбрать другую дугу")
+start_menu.add(b1, b2)
+
 
 
 def word(word, id):
