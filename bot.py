@@ -283,7 +283,7 @@ def word(word, id):
         x += widths[index] + 40
         index += 1
     drop_y = 380
-    boat_y = 340
+    boat_y = 380
     
     
     index = 0
@@ -299,9 +299,9 @@ def word(word, id):
                     bg.paste(s_drop, (s_drop_x, drop_y))
                     index += 1
                 elif word[index + 1].lower() in a:
-                    boat_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40
+                    boat_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + 20
                     b_weight, b_height = boat.size
-                    boat_place = boat.resize((40 + widths[index] + widths[index+1],
+                    boat_place = boat.resize((40 + widths[index] + widths[index+1] - 20,
                                           math.ceil(50 * b_height / 100)))
                     bg.paste(boat_place, (boat_x, boat_y))
                     index += 2
