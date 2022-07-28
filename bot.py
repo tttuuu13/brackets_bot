@@ -13,7 +13,7 @@ import json
 server = Flask(__name__)
 members_dict = {}
 text_queue = {}
-bot = telebot.TeleBot('2126267694:AAGLg0fY8kw4oFYt5T0vSWKeM39MtV6kYV8')
+bot = telebot.TeleBot('5514371847:AAHyXwFZWL4Ak_EEXFa6CigjYGQFqquaCqI')
 a = ['а', 'е', 'ё', 'и', 'о', 'у', 'э', 'ю', 'я', 'ы', 'і', 'ї', 'є']
 b = ['б', 'в', 'г', 'д', 'ж', 'з', 'к', 'л', 'м', 'н', 'п', 'р', 'с', 'т', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'й', 'ґ']
 s_drop = Image.open('звезда.png')
@@ -1489,7 +1489,7 @@ def f(query):
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
 
 
-@server.route('/' + '2126267694:AAGLg0fY8kw4oFYt5T0vSWKeM39MtV6kYV8', methods=['POST'])
+@server.route('/' + '5514371847:AAHyXwFZWL4Ak_EEXFa6CigjYGQFqquaCqI', methods=['POST'])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "!", 200
@@ -1498,7 +1498,7 @@ def getMessage():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://planes-bot.herokuapp.com/' + '2126267694:AAGLg0fY8kw4oFYt5T0vSWKeM39MtV6kYV8')
+    bot.set_webhook(url='https://brackets-tg-bot.herokuapp.com/' + '5514371847:AAHyXwFZWL4Ak_EEXFa6CigjYGQFqquaCqI')
     return "!", 200
 
 if __name__ == '__main__':
