@@ -44,6 +44,7 @@ def word(word, id):
     new_line = False
     
     try:
+        """
         with open("preferences.txt", "r") as f:
             s = ast.literal_eval(f.read())[id]['plane']
         if s == '1':
@@ -53,7 +54,7 @@ def word(word, id):
         elif s == '3':
             boat = boat_3
         elif s == '4':
-            boat = boat_4
+            boat = boat_4"""
     except:
         boat = boat_1
     
