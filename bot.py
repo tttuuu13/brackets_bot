@@ -1326,8 +1326,8 @@ def create_word(message):
             photo.close()
             os.remove(i + '.png')
             #bot.send_message(chat_id=599040955, text=i)
-    """
-    except:
+    except Exception as e:
+        print e
         try:
             for i in message.text.split():
                 photo, newline = word(i, str(message.chat.id))
@@ -1343,7 +1343,7 @@ def create_word(message):
                 #bot.send_message(chat_id=599040955, text=i)
         except:
             bot.send_message(chat_id=message.chat.id, text='Произошла ошибка, проверьте отсутствие недопустимых знаков')
-            return"""
+            return
 
 @bot.callback_query_handler(lambda query: query.data == 'Выход')
 def exit_func(query):
