@@ -1084,7 +1084,7 @@ def word_with_boats(word, id):
                     b_weight, b_height = boat.size
                     boat_place = boat.resize((40 + widths[index] + widths[index+1],
                                           math.ceil(50 * b_height / 100)))
-                    bg.paste(boat_place, (boat_x, boat_y), boat_place)
+                    bg.paste(boat_place, (boat_x, boat_y))
                     index += 2
                 else:
                     index += 1
