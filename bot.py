@@ -1327,7 +1327,7 @@ def create_word(message):
             os.remove(i + '.png')
             #bot.send_message(chat_id=599040955, text=i)
     except Exception as e:
-        print e
+        print(e)
         try:
             for i in message.text.split():
                 photo, newline = word(i, str(message.chat.id))
