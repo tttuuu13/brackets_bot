@@ -28,7 +28,7 @@ boat_4 = Image.open('самолет4.png')
 start_menu = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True, one_time_keyboard=False)
 b1 = types.KeyboardButton(text='Ввести текст')
 b2 = types.KeyboardButton(text="Выбрать вид слов")
-b3 = types.KeyboardButton(text="Выбрать другой самолет")
+b3 = types.KeyboardButton(text="Выбрать другую дугу")
 start_menu.add(b1, b2, b3)
 
 
@@ -1169,7 +1169,7 @@ def g_text(text1, size, orientation, id):
 @bot.message_handler(commands=['start'])
 def answer(message):
     global start_menu
-    bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста или изменения вида самолетов', reply_markup=start_menu)
+    bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста или изменения вида дуг', reply_markup=start_menu)
 
 
 @bot.message_handler(commands=['text'])
@@ -1261,7 +1261,7 @@ def create_text(message):
 def generate_text(message):
     is_available(message)
 
-@bot.message_handler(func=lambda m: m.text == 'Выбрать другой самолет')
+@bot.message_handler(func=lambda m: m.text == 'Выбрать другую дугу')
 def answer(message):
     bot.send_message(chat_id=message.chat.id, text="Выберите один из вариантов:")
     
@@ -1292,9 +1292,9 @@ def answer(message):
 @bot.message_handler(func=lambda m: m.text == 'Выбрать вид слов')
 def ans(message):
     k = types.InlineKeyboardMarkup(row_width=1)
-    k.add(types.InlineKeyboardButton(text='Самолеты и звезды', callback_data='w1'))
-    k.add(types.InlineKeyboardButton(text='Только самолеты', callback_data='w2'))
-    k.add(types.InlineKeyboardButton(text='Только звезды', callback_data='w3'))
+    k.add(types.InlineKeyboardButton(text='Дуги и точки', callback_data='w1'))
+    k.add(types.InlineKeyboardButton(text='Только дуги', callback_data='w2'))
+    k.add(types.InlineKeyboardButton(text='Только точки', callback_data='w3'))
     k.add(types.InlineKeyboardButton(text='Только текст', callback_data='w4'))
     bot.send_message(chat_id=message.chat.id, text='Выбирайте', reply_markup=k)
 
