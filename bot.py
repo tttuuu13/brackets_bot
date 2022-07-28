@@ -1314,17 +1314,27 @@ def create_word(message):
                     photo, new_line = word_with_drops(i, str(message.chat.id))
                 elif w_type == '4':
                     photo, new_line = word_only(i, str(message.chat.id))
+                if not '?' in i:
+                    pass
+                else:
+                    i = 'pic'
+                photo.save(i + '.png')
+                photo = open(i + '.png', 'rb')
+                bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
+                photo.close()
+                os.remove(i + '.png')
         except:
-            photo, new_line = word(i, str(message.chat.id))
-        if not '?' in i:
-            pass
-        else:
-            i = 'pic'
-        photo.save(i + '.png')
-        photo = open(i + '.png', 'rb')
-        bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
-        photo.close()
-        os.remove(i + '.png')
+            for i in message.text.split():
+                photo, new_line = word(i, str(message.chat.id))
+                if not '?' in i:
+                    pass
+                else:
+                    i = 'pic'
+                photo.save(i + '.png')
+                photo = open(i + '.png', 'rb')
+                bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
+                photo.close()
+                os.remove(i + '.png')
         #bot.send_message(chat_id=599040955, text=i)
     except Exception as e:
         print(e)
