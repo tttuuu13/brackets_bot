@@ -51,7 +51,7 @@ def word(word, id):
             if char.lower() in excluded:
                 img = Image.open('Буквы/blank.png')
                 width, height = img.size
-                img = img.resize((150, 80), Image.ANTIALIAS)
+                img = img.resize((200, 80), Image.ANTIALIAS)
                 width, height = img.size
                 width_total += width
                 widths.append(width)
