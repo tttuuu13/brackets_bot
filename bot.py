@@ -1,4 +1,3 @@
-# coding=utf8
 from PIL import Image
 import telebot
 from telebot import types
@@ -6,7 +5,6 @@ import os
 from flask import Flask, request
 import math
 import ast
-import json
 
 
 
@@ -35,31 +33,31 @@ start_menu.add(b1, b2)
 
 def word(word, id):
     global boat_1
-    global boat_2
-    global boat_3
-    global boat_4
+    boat = boat_1
     width_total = (len(word) - 1) * 40 + 80
     widths = []
     chars = []
     new_line = False
     
     try:
-        with open("preferences.txt", "r") as f:
-            s = ast.literal_eval(f.read())[id]['plane']
-        if s == '1':
-            boat = boat_1
-        elif s == '2':
-            boat = boat_2
-        elif s == '3':
-            boat = boat_3
-        elif s == '4':
-            boat = boat_4
+        with open("preferences.txt", "r", encoding='utf-8') as f:
+            excluded = eval(f.read())[id]['wordType']
     except:
-        boat = boat_1
+        excluded = ""
+        
     
     for char in word:
         try:
-            if char == '?':
+            if char.lower() in excluded:
+                img = Image.open('Буквы/blank.png')
+                width, height = img.size
+                img = img.resize((60 * width // height, 80), Image.ANTIALIAS)
+                width, height = img.size
+                width_total += width
+                widths.append(width)
+                chars.append(img)
+                continue
+            elif char == '?':
                 img = Image.open('Буквы/q.png')
             elif char == ':':
                 img = Image.open('Буквы/colon.png')
@@ -252,6 +250,8 @@ def word(word, id):
             bg.paste(img, (x, 90))
         elif word[index] == '.':
             bg.paste(img, (x, 290))
+        elif word[index] in excluded:
+            bg.paste(img, (x, 310))
         elif word[index] == ',':
             bg.paste(img, (x, 310))
         elif word[index] == ',':
@@ -300,9 +300,8 @@ def word(word, id):
                     index += 1
                 elif word[index + 1].lower() in a:
                     boat_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + 20
-                    b_weight, b_height = boat.size
-                    boat_place = boat.resize((40 + widths[index] + widths[index+1] - 40,
-                                          math.ceil(50 * b_height / 100)))
+                    b_width, b_height = boat.size
+                    boat_place = boat.resize((40 + widths[index] + widths[index+1] - 40, 150))
                     bg.paste(boat_place, (boat_x, boat_y))
                     index += 2
                 else:
@@ -317,782 +316,7 @@ def word(word, id):
             index += 1
     return bg, new_line
 
-def word_only(word, id):
-    global boat_1
-    global boat_2
-    global boat_3
-    global boat_4
-    width_total = (len(word) - 1) * 40 + 80
-    widths = []
-    chars = []
-    new_line = False
-    
-    
-    for char in word:
-        try:
-            if char == '?':
-                img = Image.open('Буквы/q.png')
-            elif char == ':':
-                img = Image.open('Буквы/colon.png')
-            elif char == '"':
-                img = Image.open('Буквы/comas.png')
-            elif char == '-' or char == '–' or char == '—':
-                img = Image.open('Буквы/-.png')
-            elif char == 'і' or char == 'i':
-                img = Image.open('Буквы/іі.png')
-            else:
-                img = Image.open('Буквы/' + char.upper() + '.png')
-            width, height = img.size
-        except:
-            pass
-        
-        if char == char.upper():
-            if char == 'Ё':
-                img = img.resize((320 * width // height, 320), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Щ' or char == 'Ц':
-                img = img.resize((260 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Й':
-                img = img.resize((320 * width // height, 320), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == '.':
-                img = img.resize((60 * width // height, 60), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == ',':
-                img = img.resize((100 * width // height, 100), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '"':
-                img = img.resize((100 * width // height, 100), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '!':
-                img = img.resize((290 * width // height, 290), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '?':
-                img = img.resize((290 * width // height, 290), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '-':
-                img = img.resize((150 * width // height, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '–':
-                img = img.resize((150 * width // height + 150, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '—':
-                img = img.resize((150 * width // height + 200, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == ':':
-                img = img.resize((220 * width // height, 220), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == ';':
-                img = img.resize((280 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == 'Ґ':
-                img = img.resize((295 * width // height, 295), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Ї':
-                img = img.resize((330 * width // height, 330), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == '*':
-                new_line = True
-            elif char == '_':
-                width_total += 200
-                widths.append(200)
-                chars.append(Image.new('RGB', (200, 250), 'white'))
-            else:
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-        else:
-            if char == 'ё':
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'щ' or char == 'ц':
-                img = img.resize((200 * width // height, 220), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'ї':
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'й':
-                img = img.resize((250 * width // height, 250), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'ґ':
-                img = img.resize((230 * width // height, 230), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'і' or char == 'i':
-                img = img.resize((280 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            else:
-                img = img.resize((200 * width // height, 200), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
 
-    bg = Image.new('RGB', (width_total, 600), 'white')
-    x = 40
-    index = 0
-    for img in chars:
-        if word[index] == 'Ё':
-            bg.paste(img, (x, 20))
-        elif word[index] == 'ё':
-            bg.paste(img, (x, 80))
-        elif word[index] == 'Й':
-            bg.paste(img, (x, 20))
-        elif word[index] == 'й':
-            bg.paste(img, (x, 90))
-        elif word[index] == '.':
-            bg.paste(img, (x, 290))
-        elif word[index] == ',':
-            bg.paste(img, (x, 310))
-        elif word[index] == ',':
-            bg.paste(img, (x, 50))
-        elif word[index] == '!':
-            bg.paste(img, (x, 50))
-        elif word[index] == '?':
-            bg.paste(img, (x, 50))
-        elif word[index] == ':':
-            bg.paste(img, (x, 140))
-        elif word[index] == ';':
-            bg.paste(img, (x, 140))
-        elif word[index] == 'Ґ':
-            bg.paste(img, (x, 45))
-        elif word[index] == 'ґ':
-            bg.paste(img, (x, 110))
-        elif word[index] == 'Ї':
-            bg.paste(img, (x, 10))
-        elif word[index] == 'ї':
-            bg.paste(img, (x, 80))
-        elif word[index] == 'і' or word[index] == 'i':
-            bg.paste(img, (x, 60))
-        elif word[index] == '-' or word[index] == '–' or word[index] == '—':
-            bg.paste(img, (x, 190))
-        elif word[index] == word[index].upper():
-            bg.paste(img, (x, 80))
-        elif word[index] == word[index].lower():
-            bg.paste(img, (x, 140))
-        x += widths[index] + 40
-        index += 1
-    drop_y = 380
-    boat_y = 340
-    return bg, new_line
-
-def word_with_drops(word, id):
-    global boat_1
-    global boat_2
-    global boat_3
-    global boat_4
-    width_total = (len(word) - 1) * 40 + 80
-    widths = []
-    chars = []
-    new_line = False
-    
-    
-    for char in word:
-        try:
-            if char == '?':
-                img = Image.open('Буквы/q.png')
-            elif char == ':':
-                img = Image.open('Буквы/colon.png')
-            elif char == '"':
-                img = Image.open('Буквы/comas.png')
-            elif char == '-' or char == '–' or char == '—':
-                img = Image.open('Буквы/-.png')
-            elif char == 'і' or char == 'i':
-                img = Image.open('Буквы/іі.png')
-            else:
-                img = Image.open('Буквы/' + char.upper() + '.png')
-            width, height = img.size
-        except:
-            pass
-        
-        if char == char.upper():
-            if char == 'Ё':
-                img = img.resize((320 * width // height, 320), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Щ' or char == 'Ц':
-                img = img.resize((260 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Й':
-                img = img.resize((320 * width // height, 320), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == '.':
-                img = img.resize((60 * width // height, 60), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == ',':
-                img = img.resize((100 * width // height, 100), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '"':
-                img = img.resize((100 * width // height, 100), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '!':
-                img = img.resize((290 * width // height, 290), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '?':
-                img = img.resize((290 * width // height, 290), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '-':
-                img = img.resize((150 * width // height, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '–':
-                img = img.resize((150 * width // height + 150, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '—':
-                img = img.resize((150 * width // height + 200, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == ':':
-                img = img.resize((220 * width // height, 220), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == ';':
-                img = img.resize((280 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == 'Ґ':
-                img = img.resize((295 * width // height, 295), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Ї':
-                img = img.resize((330 * width // height, 330), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == '*':
-                new_line = True
-            elif char == '_':
-                width_total += 200
-                widths.append(200)
-                chars.append(Image.new('RGB', (200, 250), 'white'))
-            else:
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-        else:
-            if char == 'ё':
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'щ' or char == 'ц':
-                img = img.resize((200 * width // height, 220), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'ї':
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'й':
-                img = img.resize((250 * width // height, 250), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'ґ':
-                img = img.resize((230 * width // height, 230), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'і' or char == 'i':
-                img = img.resize((280 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            else:
-                img = img.resize((200 * width // height, 200), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-
-    bg = Image.new('RGB', (width_total, 600), 'white')
-    x = 40
-    index = 0
-    for img in chars:
-        if word[index] == 'Ё':
-            bg.paste(img, (x, 20))
-        elif word[index] == 'ё':
-            bg.paste(img, (x, 80))
-        elif word[index] == 'Й':
-            bg.paste(img, (x, 20))
-        elif word[index] == 'й':
-            bg.paste(img, (x, 90))
-        elif word[index] == '.':
-            bg.paste(img, (x, 290))
-        elif word[index] == ',':
-            bg.paste(img, (x, 310))
-        elif word[index] == ',':
-            bg.paste(img, (x, 50))
-        elif word[index] == '!':
-            bg.paste(img, (x, 50))
-        elif word[index] == '?':
-            bg.paste(img, (x, 50))
-        elif word[index] == ':':
-            bg.paste(img, (x, 140))
-        elif word[index] == ';':
-            bg.paste(img, (x, 140))
-        elif word[index] == 'Ґ':
-            bg.paste(img, (x, 45))
-        elif word[index] == 'ґ':
-            bg.paste(img, (x, 110))
-        elif word[index] == 'Ї':
-            bg.paste(img, (x, 10))
-        elif word[index] == 'ї':
-            bg.paste(img, (x, 80))
-        elif word[index] == 'і' or word[index] == 'i':
-            bg.paste(img, (x, 60))
-        elif word[index] == '-' or word[index] == '–' or word[index] == '—':
-            bg.paste(img, (x, 190))
-        elif word[index] == word[index].upper():
-            bg.paste(img, (x, 80))
-        elif word[index] == word[index].lower():
-            bg.paste(img, (x, 140))
-        x += widths[index] + 40
-        index += 1
-    drop_y = 370
-    boat_y = 340
-    
-    
-    index = 0
-    while index < len(word):
-        if word[index].lower() in a:
-            b_drop_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + widths[index] // 2 - 63
-            bg.paste(b_drop, (b_drop_x, drop_y))
-            index += 1
-        elif word[index].lower() in b:
-            try:
-                if word[index + 1].lower() in b:
-                    s_drop_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + widths[index] // 2 - 31
-                    bg.paste(s_drop, (s_drop_x, drop_y))
-                    index += 1
-                elif word[index + 1].lower() in a:
-                    index += 2
-                else:
-                    s_drop_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + widths[index] // 2 - 31
-                    bg.paste(s_drop, (s_drop_x, drop_y))
-                    index += 1
-            except IndexError:
-                s_drop_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + widths[index] // 2 - 31
-                bg.paste(s_drop, (s_drop_x, drop_y))
-                index += 1
-        else:
-            index += 1
-    return bg, new_line
-
-def word_with_boats(word, id):
-    global boat_1
-    global boat_2
-    global boat_3
-    global boat_4
-    width_total = (len(word) - 1) * 40 + 80
-    widths = []
-    chars = []
-    new_line = False
-    
-    with open("preferences.txt", "r") as f:
-        data = ast.literal_eval(f.read())
-    try:
-        s = data[id]['plane']
-        if s == '1':
-            boat = boat_1
-        elif s == '2':
-            boat = boat_2
-        elif s == '3':
-            boat = boat_3
-        elif s == '4':
-            boat = boat_4
-    except:
-        boat = boat_1
-    
-    for char in word:
-        try:
-            if char == '?':
-                img = Image.open('Буквы/q.png')
-            elif char == ':':
-                img = Image.open('Буквы/colon.png')
-            elif char == '"':
-                img = Image.open('Буквы/comas.png')
-            elif char == '-' or char == '–' or char == '—':
-                img = Image.open('Буквы/-.png')
-            elif char == 'і' or char == 'i':
-                img = Image.open('Буквы/іі.png')
-            else:
-                img = Image.open('Буквы/' + char.upper() + '.png')
-            width, height = img.size
-        except:
-            pass
-        
-        if char == char.upper():
-            if char == 'Ё':
-                img = img.resize((320 * width // height, 320), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Щ' or char == 'Ц':
-                img = img.resize((260 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Й':
-                img = img.resize((320 * width // height, 320), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == '.':
-                img = img.resize((60 * width // height, 60), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == ',':
-                img = img.resize((100 * width // height, 100), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '"':
-                img = img.resize((100 * width // height, 100), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '!':
-                img = img.resize((290 * width // height, 290), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '?':
-                img = img.resize((290 * width // height, 290), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '-':
-                img = img.resize((150 * width // height, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '–':
-                img = img.resize((150 * width // height + 150, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '—':
-                img = img.resize((150 * width // height + 200, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == ':':
-                img = img.resize((220 * width // height, 220), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == ';':
-                img = img.resize((280 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == 'Ґ':
-                img = img.resize((295 * width // height, 295), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Ї':
-                img = img.resize((330 * width // height, 330), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == '*':
-                new_line = True
-            elif char == '_':
-                width_total += 200
-                widths.append(200)
-                chars.append(Image.new('RGB', (200, 250), 'white'))
-            else:
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-        else:
-            if char == 'ё':
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'щ' or char == 'ц':
-                img = img.resize((200 * width // height, 220), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'ї':
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'й':
-                img = img.resize((250 * width // height, 250), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'ґ':
-                img = img.resize((230 * width // height, 230), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'і' or char == 'i':
-                img = img.resize((280 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            else:
-                img = img.resize((200 * width // height, 200), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-
-    bg = Image.new('RGB', (width_total, 600), 'white')
-    x = 40
-    index = 0
-    for img in chars:
-        if word[index] == 'Ё':
-            bg.paste(img, (x, 20))
-        elif word[index] == 'ё':
-            bg.paste(img, (x, 80))
-        elif word[index] == 'Й':
-            bg.paste(img, (x, 20))
-        elif word[index] == 'й':
-            bg.paste(img, (x, 90))
-        elif word[index] == '.':
-            bg.paste(img, (x, 290))
-        elif word[index] == ',':
-            bg.paste(img, (x, 310))
-        elif word[index] == ',':
-            bg.paste(img, (x, 50))
-        elif word[index] == '!':
-            bg.paste(img, (x, 50))
-        elif word[index] == '?':
-            bg.paste(img, (x, 50))
-        elif word[index] == ':':
-            bg.paste(img, (x, 140))
-        elif word[index] == ';':
-            bg.paste(img, (x, 140))
-        elif word[index] == 'Ґ':
-            bg.paste(img, (x, 45))
-        elif word[index] == 'ґ':
-            bg.paste(img, (x, 110))
-        elif word[index] == 'Ї':
-            bg.paste(img, (x, 10))
-        elif word[index] == 'ї':
-            bg.paste(img, (x, 80))
-        elif word[index] == 'і' or word[index] == 'i':
-            bg.paste(img, (x, 60))
-        elif word[index] == '-' or word[index] == '–' or word[index] == '—':
-            bg.paste(img, (x, 190))
-        elif word[index] == word[index].upper():
-            bg.paste(img, (x, 80))
-        elif word[index] == word[index].lower():
-            bg.paste(img, (x, 140))
-        x += widths[index] + 40
-        index += 1
-    drop_y = 370
-    boat_y = 370
-    
-    
-    index = 0
-    while index < len(word):
-        if word[index].lower() in a:
-            index += 1
-        elif word[index].lower() in b:
-            try:
-                if word[index + 1].lower() in b:
-                    index += 1
-                elif word[index + 1].lower() in a:
-                    boat_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + 20
-                    b_weight, b_height = boat.size
-                    boat_place = boat.resize((40 + widths[index] + widths[index+1] - 40,
-                                          math.ceil(50 * b_height / 100)))
-                    bg.paste(boat_place, (boat_x, boat_y))
-                    index += 2
-                else:
-                    index += 1
-            except IndexError:
-                index += 1
-        else:
-            index += 1
-    return bg, new_line
 
 
 def g_text(text1, size, orientation, id):
@@ -1261,42 +485,16 @@ def create_text(message):
 @bot.message_handler(func=lambda m: m.text == 'Ввести текст')
 def generate_text(message):
     is_available(message)
-
-@bot.message_handler(func=lambda m: m.text == 'Выбрать другую дугу')
-def answer(message):
-    bot.send_message(chat_id=message.chat.id, text="Выберите один из вариантов:")
-    
-    markup1 = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='✅', callback_data='1'))
-    img = Image.open("самолет1.png")
-    bg = Image.new("RGBA", img.size, "white")
-    bg.paste(img, img)
-    bot.send_photo(chat_id=message.chat.id, photo=bg, reply_markup=markup1)
-    
-    markup2 = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='✅', callback_data='2'))
-    img = Image.open("самолет2.png")
-    bg = Image.new("RGBA", img.size, "white")
-    bg.paste(img, img)
-    bot.send_photo(chat_id=message.chat.id, photo=bg, reply_markup=markup2)
-    
-    markup3 = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='✅', callback_data='3'))
-    img = Image.open("самолет3.png")
-    bg = Image.new("RGBA", img.size, "white")
-    bg.paste(img, img)
-    bot.send_photo(chat_id=message.chat.id, photo=bg, reply_markup=markup3)
-    
-    markup4 = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='✅', callback_data='4'))
-    img = Image.open("самолет4.png")
-    bg = Image.new("RGBA", img.size, "white")
-    bg.paste(img, img)
-    bot.send_photo(chat_id=message.chat.id, photo=bg, reply_markup=markup4)
     
 @bot.message_handler(func=lambda m: m.text == 'Выбрать вид слов')
 def ans(message):
     k = types.InlineKeyboardMarkup(row_width=1)
-    k.add(types.InlineKeyboardButton(text='Дуги и точки', callback_data='w1'))
-    k.add(types.InlineKeyboardButton(text='Только дуги', callback_data='w2'))
-    k.add(types.InlineKeyboardButton(text='Только точки', callback_data='w3'))
-    k.add(types.InlineKeyboardButton(text='Только текст', callback_data='w4'))
+    k.add(types.InlineKeyboardButton(text='Обычные', callback_data='normal'))
+    k.add(types.InlineKeyboardButton(text='Без А-Я', callback_data='w1'))
+    k.add(types.InlineKeyboardButton(text='Без У-Ю', callback_data='w2'))
+    k.add(types.InlineKeyboardButton(text='Без Ы-И', callback_data='w3'))
+    k.add(types.InlineKeyboardButton(text='Без Э-Е', callback_data='w4'))
+    k.add(types.InlineKeyboardButton(text='Без О-Ё', callback_data='w5'))
     bot.send_message(chat_id=message.chat.id, text='Выбирайте', reply_markup=k)
 
 @bot.message_handler(func=lambda m: True, content_types=['text'])
@@ -1363,72 +561,15 @@ def exit_func(query):
     exit = True
     return
 
-
-@bot.callback_query_handler(lambda query: query.data == '1')
+@bot.callback_query_handler(lambda query: query.data == 'normal')
 def f(query):
     global start_menu
     with open("preferences.txt", "r") as f:
         data = ast.literal_eval(f.read())
     try:
-        data[str(query.message.chat.id)]['plane'] = '1'
+        data[str(query.message.chat.id)]['wordType'] = ''
     except:
-        try:
-            w = data[str(query.message.chat.id)]['word']
-            data[str(query.message.chat.id)] = {'word': w, 'plane': '1'}
-        except:
-            data[str(query.message.chat.id)] = {'word': '1', 'plane': '1'}
-    with open("preferences.txt", "w") as f:
-        f.write(str(data))
-    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
-    
-
-@bot.callback_query_handler(lambda query: query.data == '2')
-def f(query):
-    global start_menu
-    with open("preferences.txt", "r") as f:
-        data = ast.literal_eval(f.read())
-    try:
-        data[str(query.message.chat.id)]['plane'] = '2'
-    except:
-        try:
-            w = data[str(query.message.chat.id)]['word']
-            data[str(query.message.chat.id)] = {'word': w, 'plane': '2'}
-        except:
-            data[str(query.message.chat.id)] = {'word': '1', 'plane': '2'}
-    with open("preferences.txt", "w") as f:
-        f.write(str(data))
-    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
-
-@bot.callback_query_handler(lambda query: query.data == '3')
-def f(query):
-    global start_menu
-    with open("preferences.txt", "r") as f:
-        data = ast.literal_eval(f.read())
-    try:
-        data[str(query.message.chat.id)]['plane'] = '3'
-    except:
-        try:
-            w = data[str(query.message.chat.id)]['word']
-            data[str(query.message.chat.id)] = {'word': w, 'plane': '3'}
-        except:
-            data[str(query.message.chat.id)] = {'word': '1', 'plane': '3'}
-    with open("preferences.txt", "w") as f:
-        f.write(str(data))
-    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
-
-@bot.callback_query_handler(lambda query: query.data == '4')
-def f(query):
-    global start_menu
-    with open("preferences.txt", "r") as f:
-        data = ast.literal_eval(f.read())
-    try:
-        data[str(query.message.chat.id)]['plane'] = '4'
-    except:
-        try:
-            w = data[str(query.message.chat.id)]['word']
-            data[str(query.message.chat.id)] = {'word': w, 'plane': '4'}
-        except:
-            data[str(query.message.chat.id)] = {'word': '1', 'plane': '4'}
+        data[str(query.message.chat.id)] = {'wordType': ''}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1436,17 +577,14 @@ def f(query):
 @bot.callback_query_handler(lambda query: query.data == 'w1')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r") as f:
+    with open("preferences.txt", "r", encoding = 'utf-8') as f:
         data = ast.literal_eval(f.read())
+        print(data)
     try:
-        data[str(query.message.chat.id)]['word'] = '1'
+        data[str(query.message.chat.id)]['wordType'] = 'ая'
     except:
-        try:
-            p = data[str(query.message.chat.id)]['plane']
-            data[str(query.message.chat.id)] = {'word': '1', 'plane': p}
-        except:
-            data[str(query.message.chat.id)] = {'word': '1', 'plane': '1'}
-    with open("preferences.txt", "w") as f:
+        data[str(query.message.chat.id)] = {'wordType': 'ая'}
+    with open("preferences.txt", "w", encoding = 'utf-8') as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
 
@@ -1456,13 +594,9 @@ def f(query):
     with open("preferences.txt", "r") as f:
         data = ast.literal_eval(f.read())
     try:
-        data[str(query.message.chat.id)]['word'] = '2'
+        data[str(query.message.chat.id)]['wordType'] = 'ую'
     except:
-        try:
-            p = data[str(query.message.chat.id)]['plane']
-            data[str(query.message.chat.id)] = {'word': '2', 'plane': p}
-        except:
-            data[str(query.message.chat.id)] = {'word': '2', 'plane': '1'}
+        data[str(query.message.chat.id)] = {'wordType': 'ую'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1473,13 +607,9 @@ def f(query):
     with open("preferences.txt", "r") as f:
         data = ast.literal_eval(f.read())
     try:
-        data[str(query.message.chat.id)]['word'] = '3'
+        data[str(query.message.chat.id)]['wordType'] = 'ыи'
     except:
-        try:
-            p = data[str(query.message.chat.id)]['plane']
-            data[str(query.message.chat.id)] = {'word': '3', 'plane': p}
-        except:
-            data[str(query.message.chat.id)] = {'word': '3', 'plane': '1'}
+        data[str(query.message.chat.id)] = {'wordType': 'ыи'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
@@ -1490,13 +620,22 @@ def f(query):
     with open("preferences.txt", "r") as f:
         data = ast.literal_eval(f.read())
     try:
-        data[str(query.message.chat.id)]['word'] = '4'
+        data[str(query.message.chat.id)]['wordType'] = 'эе'
     except:
-        try:
-            p = data[str(query.message.chat.id)]['plane']
-            data[str(query.message.chat.id)] = {'word': '4', 'plane': p}
-        except:
-            data[str(query.message.chat.id)] = {'word': '4', 'plane': '1'}
+        data[str(query.message.chat.id)] = {'wordType': 'эе'}
+    with open("preferences.txt", "w") as f:
+        f.write(str(data))
+    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
+
+@bot.callback_query_handler(lambda query: query.data == 'w5')
+def f(query):
+    global start_menu
+    with open("preferences.txt", "r") as f:
+        data = ast.literal_eval(f.read())
+    try:
+        data[str(query.message.chat.id)]['wordType'] = 'оё'
+    except:
+        data[str(query.message.chat.id)] = {'wordType': 'оё'}
     with open("preferences.txt", "w") as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
