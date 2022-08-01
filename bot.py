@@ -1,4 +1,5 @@
-from PIL import Image
+from admin import *
+from words import word, g_text
 import telebot
 from telebot import types
 import os
@@ -12,396 +13,76 @@ server = Flask(__name__)
 members_dict = {}
 text_queue = {}
 bot = telebot.TeleBot('5514371847:AAHyXwFZWL4Ak_EEXFa6CigjYGQFqquaCqI')
-a = ['а', 'е', 'ё', 'и', 'о', 'у', 'э', 'ю', 'я', 'ы', 'і', 'ї', 'є']
-b = ['б', 'в', 'г', 'д', 'ж', 'з', 'к', 'л', 'м', 'н', 'п', 'р', 'с', 'т', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'й', 'ґ']
-s_drop = Image.open('звезда.png')
-s_drop = s_drop.resize((62, 62))
-b_drop = Image.open('звезда.png')
-b_drop = b_drop.resize((126, 126))
-boat_1 = Image.open('самолет1.png')
-#boat_2 = Image.open('самолет2.png')
-#boat_3 = Image.open('самолет3.png')
-#boat_4 = Image.open('самолет4.png')
-
 start_menu = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True, one_time_keyboard=False)
 b1 = types.KeyboardButton(text='Ввести текст')
-b2 = types.KeyboardButton(text="Выбрать вид слов")
-#b3 = types.KeyboardButton(text="Выбрать другую дугу")
-start_menu.add(b1, b2)
+b2 = types.KeyboardButton(text="Вид слов")
+b3 = types.KeyboardButton(text="Цвет гласных")
+start_menu.add(b1, b2, b3)
+oops = 'Упс, кажется у вас нет доступа'
 
-
-
-def word(word, id):
-    global boat_1
-    boat = boat_1
-    width_total = (len(word) - 1) * 40 + 80
-    widths = []
-    chars = []
-    new_line = False
-    
-    try:
-        with open("preferences.txt", "r", encoding='utf-8') as f:
-            excluded = eval(f.read())[id]['wordType']
-    except:
-        excluded = ""
-        
-    
-    for char in word:
-        try:
-            if char.lower() in excluded:
-                img = Image.open('Буквы/blank.png')
-                width, height = img.size
-                img = img.resize((200, 80), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == '?':
-                img = Image.open('Буквы/q.png')
-            elif char == ':':
-                img = Image.open('Буквы/colon.png')
-            elif char in '“«„"':
-                img = Image.open('Буквы/opencommas.png')
-            elif char in '”’»“"':
-                img = Image.open('Буквы/closecommas.png')
-            elif char == '-' or char == '–' or char == '—':
-                img = Image.open('Буквы/-.png')
-            elif char == 'і' or char == 'i':
-                img = Image.open('Буквы/іі.png')
-            else:
-                img = Image.open('Буквы/' + char.upper() + '.png')
-            width, height = img.size
-        except:
-            pass
-        
-        if char == char.upper():
-            if char == 'Ё':
-                img = img.resize((320 * width // height, 320), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Щ' or char == 'Ц':
-                img = img.resize((260 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Й':
-                img = img.resize((320 * width // height, 320), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == '.':
-                img = img.resize((60 * width // height, 60), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == ',':
-                img = img.resize((100 * width // height, 100), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char in '“«„"”’»“"':
-                img = img.resize((100 * width // height, 100), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '!':
-                img = img.resize((290 * width // height, 290), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '?':
-                img = img.resize((290 * width // height, 290), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '-':
-                img = img.resize((150 * width // height, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '–':
-                img = img.resize((150 * width // height + 150, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == '—':
-                img = img.resize((150 * width // height + 200, 150), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == ':':
-                img = img.resize((220 * width // height, 220), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == ';':
-                img = img.resize((280 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-            elif char == 'Ґ':
-                img = img.resize((295 * width // height, 295), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'Ї':
-                img = img.resize((330 * width // height, 330), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == '*':
-                new_line = True
-            elif char == '_':
-                width_total += 200
-                widths.append(200)
-                chars.append(Image.new('RGB', (200, 250), 'white'))
-            else:
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-        else:
-            if char == 'ё':
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'щ' or char == 'ц':
-                img = img.resize((200 * width // height, 220), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'ї':
-                img = img.resize((260 * width // height, 260), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'й':
-                img = img.resize((250 * width // height, 250), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'ґ':
-                img = img.resize((230 * width // height, 230), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            elif char == 'і' or char == 'i':
-                img = img.resize((280 * width // height, 280), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-            else:
-                img = img.resize((200 * width // height, 200), Image.ANTIALIAS)
-                width, height = img.size
-                width_total += width
-                widths.append(width)
-                chars.append(img)
-                continue
-
-    bg = Image.new('RGB', (width_total, 600), 'white')
-    x = 40
-    index = 0
-    for img in chars:
-        if word[index] == 'Ё':
-            bg.paste(img, (x, 20))
-        elif word[index] == 'ё':
-            bg.paste(img, (x, 80))
-        elif word[index] == 'Й':
-            bg.paste(img, (x, 20))
-        elif word[index] == 'й':
-            bg.paste(img, (x, 90))
-        elif word[index] == '.':
-            bg.paste(img, (x, 290))
-        elif word[index] in excluded:
-            bg.paste(img, (x, 310))
-        elif word[index] == ',':
-            bg.paste(img, (x, 310))
-        elif word[index] == ',':
-            bg.paste(img, (x, 50))
-        elif word[index] == '!':
-            bg.paste(img, (x, 50))
-        elif word[index] == '?':
-            bg.paste(img, (x, 50))
-        elif word[index] == ':':
-            bg.paste(img, (x, 140))
-        elif word[index] == ';':
-            bg.paste(img, (x, 140))
-        elif word[index] == 'Ґ':
-            bg.paste(img, (x, 45))
-        elif word[index] == 'ґ':
-            bg.paste(img, (x, 110))
-        elif word[index] == 'Ї':
-            bg.paste(img, (x, 10))
-        elif word[index] == 'ї':
-            bg.paste(img, (x, 80))
-        elif word[index] == 'і' or word[index] == 'i':
-            bg.paste(img, (x, 60))
-        elif word[index] == '-' or word[index] == '–' or word[index] == '—':
-            bg.paste(img, (x, 190))
-        elif word[index] == word[index].upper():
-            bg.paste(img, (x, 80))
-        elif word[index] == word[index].lower():
-            bg.paste(img, (x, 140))
-        x += widths[index] + 40
-        index += 1
-    drop_y = 370
-    boat_y = 370
-    
-    
-    index = 0
-    while index < len(word):
-        if word[index].lower() in a:
-            b_drop_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + widths[index] // 2 - 63
-            bg.paste(b_drop, (b_drop_x, drop_y))
-            index += 1
-        elif word[index].lower() in b:
-            try:
-                if word[index + 1].lower() in b:
-                    s_drop_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + widths[index] // 2 - 31
-                    bg.paste(s_drop, (s_drop_x, drop_y))
-                    index += 1
-                elif word[index + 1].lower() in a:
-                    boat_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + 20
-                    b_width, b_height = boat.size
-                    boat_place = boat.resize((40 + widths[index] + widths[index+1] - 40, 150))
-                    bg.paste(boat_place, (boat_x, boat_y))
-                    index += 2
-                else:
-                    s_drop_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + widths[index] // 2 - 31
-                    bg.paste(s_drop, (s_drop_x, drop_y))
-                    index += 1
-            except IndexError:
-                s_drop_x = sum(widths[:index]) + 40 * len(widths[:index]) + 40 + widths[index] // 2 - 31
-                bg.paste(s_drop, (s_drop_x, drop_y))
-                index += 1
-        else:
-            index += 1
-    return bg, new_line
-
-
-
-
-def g_text(text1, size, orientation, id):
-    if orientation == 'альбомная':
-        width, height = 3508, 2480
-    elif orientation == 'книжная':
-        width, height = 2480, 3508
-
-    bg = Image.new('RGB', (width, height), 'white')
-
-    x, y = 100, 100
-    text_list = list(text1.replace('\n', '* ').split())
-    img_height = 0
-    x_max = 0
-    while y + img_height + 0.1 * size <= height:
-        try:
-            w = text_list[0]
-        except:
-            break
-        
-        try:
-            with open('preferences.txt', 'r') as f:
-                w_type = ast.literal_eval(f.read())[str(id)]['word']
-            
-            if w_type == '1':
-                img, new_line = word(w, str(id))
-            elif w_type == '2':
-                img, new_line = word_with_boats(w, str(id))
-            elif w_type == '3':
-                img, new_line = word_with_drops(w, str(id))
-            elif w_type == '4':
-                img, new_line = word_only(w, str(id))
-        except:
-            img, new_line = word(w, id)
-        
-        img_width, img_height = img.size
-        img = img.resize((math.ceil(80 * img_width // img_height * (size / 10)), math.ceil(80 * (size / 10))), Image.ANTIALIAS)
-        img_width, img_height = img.size
-        if x + img_width + 100 <= width:
-            bg.paste(img, (math.ceil(x), math.ceil(y)))
-            if x + img_width + 100 > x_max:
-                x_max = x + img_width
-            x += img_width + 2 * size
-
-        else:
-            if x > x_max:
-                x_max = x
-            y += img_height + 0.1 * size
-            x = 100
-            bg.paste(img, (math.ceil(x), math.ceil(y)))
-            x += img_width + 2 * size
-        
-        if new_line:
-            if x > x_max:
-                x_max = x
-            y += img_height + 0.1 * size
-            x = 100
-        
-        try:
-            del text_list[0]
-        except:
-            break
-    if x_max > width:
-        x_max = width
-    if y + 50 + img_height > height:
-        y = height
-    else:
-        y = y + 50 + img_height
-    bg = bg.crop((0, 0, x_max + 100, y))
-    if len(text_list) != 0:
-        text1 = ' '.join(text_list)
-        return bg, text1
-    return bg, ''
 
 @bot.message_handler(commands=['start'])
 def answer(message):
     global start_menu
-    bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста или изменения вида дуг', reply_markup=start_menu)
+    if message.chat.id in get_ids():
+        bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста или изменения вида дуг', reply_markup=start_menu)
+    else:
+        bot.send_message(chat_id=message.chat.id, text=oops)
 
+@bot.message_handler(commands=['admin'])
+def menu(message):
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    b1 = types.InlineKeyboardButton(text='Добавить пользователя', callback_data='add_user')
+    b2 = types.InlineKeyboardButton(text='Удалить кого-нибудь', callback_data='delete_user')
+    markup.add(b1, b2)
+    bot.send_message(chat_id=message.chat.id, text='Главное меню администратора', reply_markup=markup)
 
-@bot.message_handler(commands=['text'])
-def is_available(message):
-    ask_text(message)
+@bot.callback_query_handler(lambda query: query.data == 'add_user')
+def ask_for_message(query):
+    bot.send_message(chat_id=query.message.chat.id, text='Отлично, теперь перешлите мне любое сообщение от пользователя, которого хотите добавить. Только так я смогу узнать его айди')
+    message = query.message
+    bot.register_next_step_handler(message, ask_name)
+
+def ask_name(message):
+    try:
+        id = message.forward_from.id
+    except: 
+         bot.send_message(chat_id=message.chat.id, text='Не похоже на пересланное сообщение...\nПопробуйте снова')
+         menu(message)
+         return
+    bot.send_message(chat_id=message.chat.id, text='Как вы хотите назвать пользователя?')
+    bot.register_next_step_handler(message, add, id=id)
+
+def add(message, id):
+    if add_user(id, message.text, 'normal', 'false'):
+        bot.send_message(chat_id=message.chat.id, text=f'Успех! {message.text} теперь имеет доступ к боту')
+        bot.send_message(chat_id=id, text='Привет, я Словомастер, спешу сообщить, что Вам открыт доступ ко всем моим функциям. Приятного использования!', reply_markup=start_menu)
+    else:
+        bot.send_message(chat_id=message.chat.id, text='Что-то не так, попробуйте еще раз')
+        menu(message)
+
+@bot.callback_query_handler(lambda query: query.data == 'delete_user')
+def users_list(query):
+    users = get_users_list()
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    for user in users:
+        markup.add(types.InlineKeyboardButton(text=user, callback_data=f'delete_{user}'))
+    bot.send_message(chat_id=query.message.chat.id, text='Нажмите на пользователя, которого хотите удалить', reply_markup=markup)
+
+@bot.callback_query_handler(lambda query: query.data[:6] == 'delete')
+def delete(query):
+    if delete_user(query.data[7:]):
+        bot.send_message(query.message.chat.id, text=f'Пользователь {query.data[7:]} успешно удален')
+    else:
+        bot.send_message(chat_id=message.chat.id, text='Что-то не так, попробуйте еще раз')
+        menu(message)
+
     
+@bot.message_handler(commands=['text'])
 def ask_text(message):
+    if message.chat.id not in get_ids():
+        bot.send_message(chat_id=message.chat.id, text=oops)
+        return
     global exit
     global text_queue
     exit = False
@@ -461,12 +142,12 @@ def create_text(message):
     try:
         msg = bot.send_message(chat_id=message.chat.id, text='Ожидайте, процесс может занять какое-то время🕒')
         text, size, orientation = text_queue[str(message.chat.id)]
-        photo, text2 = g_text(text, size, orientation, message.chat.id)
+        photo, text2 = g_text(text, size, orientation, str(message.chat.id))
         photo.save(text[:6] + '.png')
         photo = open(text[:6] + '.png', 'rb')
         bot.send_document(chat_id=message.chat.id, data=photo, caption=text[:10] + '...')
         while text2 != '':
-            photo, text2 = g_text(text2, size, orientation, mode)
+            photo, text2 = g_text(text2, size, orientation, str(message.chat.id))
             print(text2)
             photo.save(text[:6] + '.png')
             photo = open(text[:6] + '.png', 'rb')
@@ -484,12 +165,12 @@ def create_text(message):
 
 @bot.message_handler(func=lambda m: m.text == 'Ввести текст')
 def generate_text(message):
-    is_available(message)
+    ask_text(message)
     
 @bot.message_handler(func=lambda m: m.text == 'Выбрать вид слов')
 def ans(message):
     k = types.InlineKeyboardMarkup(row_width=1)
-    k.add(types.InlineKeyboardButton(text='Обычные', callback_data='normal'))
+    k.add(types.InlineKeyboardButton(text='Обычный', callback_data='normal'))
     k.add(types.InlineKeyboardButton(text='Без А-Я', callback_data='w1'))
     k.add(types.InlineKeyboardButton(text='Без У-Ю', callback_data='w2'))
     k.add(types.InlineKeyboardButton(text='Без Ы-И', callback_data='w3'))
@@ -499,23 +180,14 @@ def ans(message):
 
 @bot.message_handler(func=lambda m: True, content_types=['text'])
 def create_word(message):
+    if message.chat.id not in get_ids():
+        bot.send_message(chat_id=message.chat.id, text=oops)
+        return
     try:
         try:
-            with open('preferences.txt', 'r') as f:
-                w_type = ast.literal_eval(f.read())[str(message.chat.id)]['word']
             for i in message.text.split():
-                if w_type == '1':
-                    photo, new_line = word(i, str(message.chat.id))
-                elif w_type == '2':
-                    photo, new_line = word_with_boats(i, str(message.chat.id))
-                elif w_type == '3':
-                    photo, new_line = word_with_drops(i, str(message.chat.id))
-                elif w_type == '4':
-                    photo, new_line = word_only(i, str(message.chat.id))
-                if not '?' in i:
-                    pass
-                else:
-                    i = 'pic'
+                photo, new_line = word(i, str(message.chat.id))
+                i = i.replace('?', '').replace('*', '')
                 photo.save(i + '.png')
                 photo = open(i + '.png', 'rb')
                 bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
@@ -524,10 +196,7 @@ def create_word(message):
         except:
             for i in message.text.split():
                 photo, new_line = word(i, str(message.chat.id))
-                if not '?' in i:
-                    pass
-                else:
-                    i = 'pic'
+                i.replace('?', '').replace('*', '')
                 photo.save(i + '.png')
                 photo = open(i + '.png', 'rb')
                 bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
@@ -539,10 +208,7 @@ def create_word(message):
         try:
             for i in message.text.split():
                 photo, newline = word(i, str(message.chat.id))
-                if not '?' in i:
-                    pass
-                else:
-                    i = 'poop'
+                i.replace('?', '').replace('*', '')
                 photo.save(i + '.png')
                 photo = open(i + '.png', 'rb')
                 bot.send_document(chat_id=message.chat.id, data=photo, caption=i)
@@ -564,15 +230,11 @@ def exit_func(query):
 @bot.callback_query_handler(lambda query: query.data == 'normal')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r") as f:
-        data = ast.literal_eval(f.read())
-    try:
-        data[str(query.message.chat.id)]['wordType'] = ''
-    except:
-        data[str(query.message.chat.id)] = {'wordType': ''}
-    with open("preferences.txt", "w") as f:
-        f.write(str(data))
-    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
+    if r != None:
+        if change_wordType(id, 'normal'):
+            bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
+        else:
+            bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w1')
 def f(query):
@@ -591,52 +253,52 @@ def f(query):
 @bot.callback_query_handler(lambda query: query.data == 'w2')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r") as f:
+    with open("preferences.txt", "r", encoding='utf-8') as f:
         data = ast.literal_eval(f.read())
     try:
         data[str(query.message.chat.id)]['wordType'] = 'ую'
     except:
         data[str(query.message.chat.id)] = {'wordType': 'ую'}
-    with open("preferences.txt", "w") as f:
+    with open("preferences.txt", "w", encoding='utf-8') as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w3')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r") as f:
+    with open("preferences.txt", "r", encoding='utf-8') as f:
         data = ast.literal_eval(f.read())
     try:
         data[str(query.message.chat.id)]['wordType'] = 'ыи'
     except:
         data[str(query.message.chat.id)] = {'wordType': 'ыи'}
-    with open("preferences.txt", "w") as f:
+    with open("preferences.txt", "w", encoding='utf-8') as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w4')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r") as f:
+    with open("preferences.txt", "r", encoding='utf-8') as f:
         data = ast.literal_eval(f.read())
     try:
         data[str(query.message.chat.id)]['wordType'] = 'эе'
     except:
         data[str(query.message.chat.id)] = {'wordType': 'эе'}
-    with open("preferences.txt", "w") as f:
+    with open("preferences.txt", "w", encoding='utf-8') as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w5')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r") as f:
+    with open("preferences.txt", "r", encoding='utf-8') as f:
         data = ast.literal_eval(f.read())
     try:
         data[str(query.message.chat.id)]['wordType'] = 'оё'
     except:
         data[str(query.message.chat.id)] = {'wordType': 'оё'}
-    with open("preferences.txt", "w") as f:
+    with open("preferences.txt", "w", encoding='utf-8') as f:
         f.write(str(data))
     bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
 
