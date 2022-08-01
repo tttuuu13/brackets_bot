@@ -56,7 +56,8 @@ def ask_name(message):
 def add(message, id):
     if add_user(id, message.text, 'normal', 'false'):
         bot.send_message(chat_id=message.chat.id, text=f'Успех! {message.text} теперь имеет доступ к боту')
-        bot.send_message(chat_id=id, text='Привет, я Словомастер, спешу сообщить, что Вам открыт доступ ко всем моим функциям. Приятного использования!', reply_markup=start_menu)
+        bot.send_message(chat_id=id, text='Привет, я Словомастер, спешу сообщить, что Вам открыт доступ ко всем моим функциям. Приятного использования!')
+        bot.send_message(chat_id=id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста или изменения вида дуг', reply_markup=start_menu)
     else:
         bot.send_message(chat_id=message.chat.id, text='Что-то не так, попробуйте еще раз')
         menu(message)
