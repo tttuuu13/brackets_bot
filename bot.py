@@ -25,7 +25,7 @@ oops = 'Упс, кажется у вас нет доступа'
 def answer(message):
     global start_menu
     if message.chat.id in get_ids():
-        bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста или изменения вида дуг', reply_markup=start_menu)
+        bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста или изменения вида слов', reply_markup=start_menu)
     else:
         bot.send_message(chat_id=message.chat.id, text=oops)
 
@@ -54,11 +54,12 @@ def ask_name(message):
     bot.register_next_step_handler(message, add, id=id)
 
 def add(message, id):
-    if add_user(id, message.text, 'normal', 'false'):
+    try:
+        add_user(id, message.text, 'normal', 'false')
         bot.send_message(chat_id=message.chat.id, text=f'Успех! {message.text} теперь имеет доступ к боту')
-        bot.send_message(chat_id=id, text='Привет, я Словомастер, спешу сообщить, что Вам открыт доступ ко всем моим функциям. Приятного использования!')
-        bot.send_message(chat_id=id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста или изменения вида дуг', reply_markup=start_menu)
-    else:
+        bot.send_message(chat_id=id, text='Привет, я Словомастер, спешу сообщить, что Вам открыт доступ ко всем моим функциям. Приятного использования!', reply_markup=start_menu)
+        bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста или изменения вида слов', reply_markup=start_menu)
+    except:
         bot.send_message(chat_id=message.chat.id, text='Что-то не так, попробуйте еще раз')
         menu(message)
 
@@ -168,7 +169,7 @@ def create_text(message):
 def generate_text(message):
     ask_text(message)
     
-@bot.message_handler(func=lambda m: m.text == 'Выбрать вид слов')
+@bot.message_handler(func=lambda m: m.text == 'Вид слов')
 def ans(message):
     k = types.InlineKeyboardMarkup(row_width=1)
     k.add(types.InlineKeyboardButton(text='Обычный', callback_data='normal'))
@@ -232,76 +233,57 @@ def exit_func(query):
 def f(query):
     global start_menu
     if r != None:
-        if change_wordType(id, 'normal'):
+        try:
+            change_wordType(id, 'normal')
             bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
-        else:
+        except:
             bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w1')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r", encoding = 'utf-8') as f:
-        data = ast.literal_eval(f.read())
-        print(data)
     try:
-        data[str(query.message.chat.id)]['wordType'] = 'ая'
+        change_wordType(id, 'ая')
+        bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
     except:
-        data[str(query.message.chat.id)] = {'wordType': 'ая'}
-    with open("preferences.txt", "w", encoding = 'utf-8') as f:
-        f.write(str(data))
-    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
+        bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w2')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r", encoding='utf-8') as f:
-        data = ast.literal_eval(f.read())
     try:
-        data[str(query.message.chat.id)]['wordType'] = 'ую'
+        change_wordType(id, 'ую')
+        bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
     except:
-        data[str(query.message.chat.id)] = {'wordType': 'ую'}
-    with open("preferences.txt", "w", encoding='utf-8') as f:
-        f.write(str(data))
-    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
+        bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w3')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r", encoding='utf-8') as f:
-        data = ast.literal_eval(f.read())
     try:
-        data[str(query.message.chat.id)]['wordType'] = 'ыи'
+        change_wordType(id, 'ыи')
+        bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
     except:
-        data[str(query.message.chat.id)] = {'wordType': 'ыи'}
-    with open("preferences.txt", "w", encoding='utf-8') as f:
-        f.write(str(data))
-    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
+        bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w4')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r", encoding='utf-8') as f:
-        data = ast.literal_eval(f.read())
     try:
-        data[str(query.message.chat.id)]['wordType'] = 'эе'
+        change_wordType(id, 'эе')
+        bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
     except:
-        data[str(query.message.chat.id)] = {'wordType': 'эе'}
-    with open("preferences.txt", "w", encoding='utf-8') as f:
-        f.write(str(data))
-    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
+        bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w5')
 def f(query):
     global start_menu
-    with open("preferences.txt", "r", encoding='utf-8') as f:
-        data = ast.literal_eval(f.read())
     try:
-        data[str(query.message.chat.id)]['wordType'] = 'оё'
+        change_wordType(id, 'оё')
+        bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
     except:
-        data[str(query.message.chat.id)] = {'wordType': 'оё'}
-    with open("preferences.txt", "w", encoding='utf-8') as f:
-        f.write(str(data))
-    bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
+        bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
+
 
 
 @server.route('/' + '5514371847:AAHyXwFZWL4Ak_EEXFa6CigjYGQFqquaCqI', methods=['POST'])
