@@ -12,7 +12,7 @@ import ast
 server = Flask(__name__)
 members_dict = {}
 text_queue = {}
-admins = ["599040955", "818958117"]
+admins = [599040955, 818958117]
 bot = telebot.TeleBot('5514371847:AAHyXwFZWL4Ak_EEXFa6CigjYGQFqquaCqI')
 start_menu = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True, one_time_keyboard=False)
 b1 = types.KeyboardButton(text='Ввести текст')
