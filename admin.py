@@ -4,13 +4,13 @@ import psycopg2
 url = "postgres://tpnpnvirmmyhqd:bdff77e49f90f2ded0f6fec8816cfa43d51a44718447bb2cbacd7563e1d62ccb@ec2-34-242-8-97.eu-west-1.compute.amazonaws.com:5432/df91plvkksqs18"
 
 
-def add_user(id, name, wordType, redLetters):
+def add_user(id, name, wordType, redLetters, evenLetters):
     conn = psycopg2.connect(url, sslmode="require")
     conn.autocommit = True
     cur = conn.cursor()
-    cur.execute("""INSERT INTO users (id, name, wordType, redLetters)
-                       VALUES (%s, %s, %s, %s);""",
-                       (id, name, wordType, redLetters))
+    cur.execute("""INSERT INTO users (id, name, wordType, redLetters, evenLetters)
+                       VALUES (%s, %s, %s, %s, %s);""",
+                       (id, name, wordType, redLetters, evenLetters))
     conn.close()
     cur.close()
     return True
@@ -76,6 +76,14 @@ def get_ids():
     cur.close()
     return r
 
+def change_evenLetters(id, value):
+    conn = psycopg2.connect(url, sslmode="require")
+    conn.autocommit = True
+    cur = conn.cursor()
+    cur.execute("""UPDATE users SET evenLetters = %s WHERE id = %s""", (value, id))
+    conn.close()
+    cur.close()
+    return True
 
 
 
