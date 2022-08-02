@@ -232,12 +232,11 @@ def exit_func(query):
 @bot.callback_query_handler(lambda query: query.data == 'normal')
 def f(query):
     global start_menu
-    if r != None:
-        try:
-            change_wordType(id, 'normal')
-            bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
-        except:
-            bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
+    try:
+        change_wordType(id, 'normal')
+        bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
+    except:
+        bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
 
 @bot.callback_query_handler(lambda query: query.data == 'w1')
 def f(query):
