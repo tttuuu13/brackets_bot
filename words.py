@@ -325,14 +325,7 @@ def word(word, id):
         index += 1
     
     if not get_info(id)[3]:
-        newimdata = []
-        for color in bg.getdata():
-            if color == (255, 255, 255):
-                newimdata.append((255, 255, 255))
-            else:
-                newimdata.append((0, 0, 0))
-        bg = Image.new(bg.mode,bg.size)
-        bg.putdata(newimdata)
+        bg = bg.convert('L').point(lambda x : 255 if x > 250 else 0, mode='1')
 
     index = 0
     while index < len(word):
