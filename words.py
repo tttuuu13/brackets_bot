@@ -328,9 +328,9 @@ def word(word, id):
         newimdata = []
         for color in bg.getdata():
             if color == (0, 0, 255):
-                newimdata.append(0, 0, 255)
+                newimdata.append((0, 0, 255))
             else:
-                newimdata.append(0, 0, 0)
+                newimdata.append((0, 0, 0))
         bg = Image.new(bg.mode,bg.size)
         bg.putdata(newimdata)
 
