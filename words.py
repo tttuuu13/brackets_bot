@@ -326,8 +326,9 @@ def word(word, id):
     
     if not get_info(id)[3]:
         n = Image.new('RGB', (width_total, 800), 'white')
-        s = bg.convert('L').point(lambda x : 255 if x > 200 else 0, mode='1')
-        n = n.paste(s, (0, 0))
+        bg.convert('L').point(lambda x : 255 if x > 200 else 0, mode='1')
+        s = bg
+        n.paste(s, (0, 0))
         bg = n
 
     index = 0
