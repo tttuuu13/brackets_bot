@@ -325,7 +325,11 @@ def word(word, id):
         index += 1
     
     if not get_info(id)[3]:
-        bg = bg.convert('L').point(lambda x: 255 if x > 200 else 0)
+        pixels = img.load() # create the pixel map
+        for i in range(img.size[0]): # for every pixel:
+            for j in range(img.size[1]):
+                if pixels[i,j] != (0, 0, 255):
+                    pixels[i,j] = (0, 0 ,0)
     
 
     index = 0
