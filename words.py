@@ -325,12 +325,14 @@ def word(word, id):
         index += 1
     
     if not get_info(id)[3]:
-        pixels = img.load() # create the pixel map
-        for i in range(img.size[0]): # for every pixel:
-            for j in range(img.size[1]):
-                if pixels[i,j] != (0, 0, 255):
-                    pixels[i,j] = (0, 0 ,0)
-    
+        newimdata = []
+        for color in bg.getdata():
+            if color == (0, 0, 255):
+                newimdata.append(0, 0, 255)
+            else:
+                newimdata.append(0, 0, 0)
+        bg = Image.new(bg.mode,bg.size)
+        bg.putdata(newimdata)
 
     index = 0
     while index < len(word):
