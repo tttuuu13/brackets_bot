@@ -325,8 +325,8 @@ def word(word, id):
         index += 1
     
     if not get_info(id)[3]:
-        bg = bg.convert('L').point(lambda x : 255 if x > 250 else 0, mode='1')
-
+        n = bg.convert('L').point(lambda x : 255 if x > 200 else 0, mode='1')
+        bg = n
     index = 0
     while index < len(word):
         if word[index].lower() in a:
