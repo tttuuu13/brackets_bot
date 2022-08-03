@@ -325,7 +325,7 @@ def word(word, id):
         index += 1
     
     if not get_info(id)[3]:
-        bg.convert('L').point(lambda x: 255 if x > 250 else 0)
+        bg = bg.convert('1', dither=Image.NONE)
 
     index = 0
     while index < len(word):
