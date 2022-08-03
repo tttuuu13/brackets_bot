@@ -325,9 +325,9 @@ def word(word, id):
         index += 1
     
     if not get_info(id)[3]:
-        n = bg
-        s = n.convert('L').point(lambda x : 255 if x > 200 else 0, mode='1')
-        bg = s
+        n = Image.new('RGBA', (width_total, 800), 'white')
+        s = bg.convert('L').point(lambda x : 255 if x > 200 else 0, mode='1')
+        bg = n.place(n)
 
     index = 0
     while index < len(word):
