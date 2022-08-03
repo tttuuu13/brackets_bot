@@ -327,7 +327,7 @@ def word(word, id):
     if not get_info(id)[3]:
         n = Image.new('RGBA', (width_total, 800), 'white')
         s = bg.convert('L').point(lambda x : 255 if x > 200 else 0, mode='1')
-        bg = n.place(n)
+        bg = n.place(s, (0, 0))
 
     index = 0
     while index < len(word):
