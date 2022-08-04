@@ -325,8 +325,10 @@ def word(word, id):
         index += 1
     
     if not get_info(id)[3]:
-        bg.convert('1', dither=Image.NONE)
-        bg = Image.new('RGB', (width_total, 800), 'white').paste(bg, (0, 0))
+        bg = bg.convert('1', dither=Image.NONE)
+        s = Image.new('RGB', (width_total, 800), 'white')
+        s.paste(bg, (0, 0))
+        bg = s
 
     index = 0
     while index < len(word):
