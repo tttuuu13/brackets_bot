@@ -18,10 +18,9 @@ def word(word, id):
     widths = []
     chars = []
     new_line = False
-    red = info[3]
     info = get_info(id)
     excluded = info[2]
-    
+    red = info[3]
     if info[4]:
         word = word.upper()
         boat_y = 580
