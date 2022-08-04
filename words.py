@@ -26,11 +26,11 @@ def word(word, id):
         boat_y = 580
         drop_y = 580
         accent_y = 160
-        boat_height = 250
+        boat_height = 220
         blank = 250
     else:
         boat_y = 610
-        drop_y = 610
+        drop_y = 620
         accent_y = 230
         boat_height = 200
         blank = 200
