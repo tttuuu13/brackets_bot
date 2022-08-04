@@ -72,7 +72,7 @@ def word(word, id):
         
         if not red and char.lower() in a:
             img = img.convert('1', dither=Image.NONE)
-            s = Image.new('RGB', (width_total, 800), 'white')
+            s = Image.new('RGB', (img.size), 'white')
             s.paste(img, (0, 0))
             img = s
         
