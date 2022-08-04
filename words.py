@@ -18,9 +18,10 @@ def word(word, id):
     widths = []
     chars = []
     new_line = False
-    
+    red = info[3]
     info = get_info(id)
     excluded = info[2]
+    
     if info[4]:
         word = word.upper()
         boat_y = 580
@@ -69,6 +70,12 @@ def word(word, id):
             width, height = img.size
         except:
             pass
+        
+        if not red and char.lower() in a:
+            img = img.convert('1', dither=Image.NONE)
+            s = Image.new('RGB', (width_total, 800), 'white')
+            s.paste(img, (0, 0))
+            img = s
         
         if char == char.upper():
             if char == 'Ё':
@@ -324,11 +331,6 @@ def word(word, id):
         x += widths[index] + 40
         index += 1
     
-    if not get_info(id)[3]:
-        bg = bg.convert('1', dither=Image.NONE)
-        s = Image.new('RGB', (width_total, 800), 'white')
-        s.paste(bg, (0, 0))
-        bg = s
 
     index = 0
     while index < len(word):
