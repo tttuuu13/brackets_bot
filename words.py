@@ -328,6 +328,7 @@ def word(word, id):
         elif word[index] == word[index].lower():
             bg.paste(img, (x, 340))
         x += widths[index] + 40
+        accent_y = 440 - img.size[1]
         index += 1
     
 
