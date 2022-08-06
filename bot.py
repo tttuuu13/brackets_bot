@@ -51,8 +51,9 @@ def ask_for_message(query):
 def ask_name(message):
     try:
         id = message.forward_from.id
-    except: 
-         bot.send_message(chat_id=message.chat.id, text='Не похоже на пересланное сообщение...\nПопробуйте снова')
+        print(id)
+    except Exception as e: 
+         bot.send_message(chat_id=message.chat.id, text=f'Не похоже на пересланное сообщение...\nПопробуйте снова {e}')
          menu(message)
          return
     bot.send_message(chat_id=message.chat.id, text='Как вы хотите назвать пользователя?')
