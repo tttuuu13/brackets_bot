@@ -1,8 +1,9 @@
 import psycopg2
+import os
 
 
-url = "postgres://tpnpnvirmmyhqd:bdff77e49f90f2ded0f6fec8816cfa43d51a44718447bb2cbacd7563e1d62ccb@ec2-34-242-8-97.eu-west-1.compute.amazonaws.com:5432/df91plvkksqs18"
-
+#url = "postgres://tpnpnvirmmyhqd:bdff77e49f90f2ded0f6fec8816cfa43d51a44718447bb2cbacd7563e1d62ccb@ec2-34-242-8-97.eu-west-1.compute.amazonaws.com:5432/df91plvkksqs18"
+url = os.environ['DATABASE_URL']
 
 def add_user(id, name, wordType, redLetters, evenLetters):
     conn = psycopg2.connect(url, sslmode="require")
