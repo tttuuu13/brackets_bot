@@ -59,14 +59,14 @@ def ask_name(message):
     bot.register_next_step_handler(message, add, id=id)
 
 def add(message, id):
-    #try:
-    add_user(id, message.text, 'normal', 'false', 'false')
-    bot.send_message(chat_id=message.chat.id, text=f'Успех! {message.text} теперь имеет доступ к боту')
-    bot.send_message(chat_id=id, text='Привет, я Словомастер, спешу сообщить, что Вам открыт доступ ко всем моим функциям. Приятного использования!', reply_markup=start_menu)
-    bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста, замены определенных гласных на пробелы, выбора цвета гласных и изменения регистра букв. Для того, чтобы поставить ударение, напишите символ * после ударной гласной. Например: словома*стер', reply_markup=start_menu)
-    #except Exception as e:
-    #bot.send_message(chat_id=message.chat.id, text=f'Что-то не так, попробуйте еще раз. Ошибка {e}')
-    #menu(message)
+    try:
+        add_user(id, message.text, 'normal', 'false', 'false')
+        bot.send_message(chat_id=message.chat.id, text=f'Успех! {message.text} теперь имеет доступ к боту')
+        bot.send_message(chat_id=id, text='Привет, я Словомастер, спешу сообщить, что Вам открыт доступ ко всем моим функциям. Приятного использования!', reply_markup=start_menu)
+        bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста, замены определенных гласных на пробелы, выбора цвета гласных и изменения регистра букв. Для того, чтобы поставить ударение, напишите символ * после ударной гласной. Например: словома*стер', reply_markup=start_menu)
+    except Exception as e:
+        bot.send_message(chat_id=message.chat.id, text=f'Что-то не так, попробуйте еще раз. Ошибка {e}')
+        menu(message)
 
 @bot.callback_query_handler(lambda query: query.data == 'delete_user')
 def users_list(query):
