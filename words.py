@@ -5,11 +5,11 @@ from admin import get_info
 
 a = ['а', 'е', 'ё', 'и', 'о', 'у', 'э', 'ю', 'я', 'ы', 'і', 'ї', 'є']
 b = ['б', 'в', 'г', 'д', 'ж', 'з', 'к', 'л', 'м', 'н', 'п', 'р', 'с', 'т', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'й', 'ґ']
-s_drop = Image.open('звезда.png')
+s_drop = Image.open('точка.png')
 s_drop = s_drop.resize((62, 62))
-b_drop = Image.open('звезда.png')
+b_drop = Image.open('точка.png')
 b_drop = b_drop.resize((126, 126))
-boat_1 = Image.open('самолет1.png').convert("RGBA")
+boat_1 = Image.open('штучка.png').convert("RGBA")
 
 def word(word, id):
     global boat_1
