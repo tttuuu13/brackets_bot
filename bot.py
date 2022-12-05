@@ -186,7 +186,7 @@ def users_list(query):
         date = datetime.strptime(info[5], "%Y-%m-%d").date()
         diff = (date.today() - date).days
         if diff <= info[6]:
-            users.append(info[0])
+            users.append(info[1])
     markup = types.InlineKeyboardMarkup(row_width=1)
     for user in users:
         markup.add(types.InlineKeyboardButton(text=user, callback_data=f'delete_{user}'))
