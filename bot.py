@@ -78,6 +78,9 @@ def ask_for_message(query):
 def ask_name(message):
     try:
         id = message.forward_from.id
+        if id in admins:
+            bot.send_message(message.chat.id, 'У вас уже есть вечный доступ)')
+            return
     except Exception as e: 
          bot.send_message(chat_id=message.chat.id, text=f'Не похоже на пересланное сообщение...\nПопробуйте снова {e}')
          menu(message)
