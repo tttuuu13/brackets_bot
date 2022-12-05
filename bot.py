@@ -6,6 +6,8 @@ import os
 from flask import Flask, request
 import math
 import ast
+from datetime import date, timedelta, datetime
+from texts import *
 
 
 
@@ -20,26 +22,48 @@ b2 = types.KeyboardButton(text="Пропуски вместо гласных")
 b3 = types.KeyboardButton(text="Цвет гласных")
 b4 = types.KeyboardButton(text="Регистр букв")
 start_menu.add(b1, b2, b3, b4)
-oops = 'Упс, кажется у вас нет доступа, свяжитесь с @dina_Dj'
+
+write_me = types.InlineKeyboardMarkup([[types.InlineKeyboardButton("НАПИСАТЬ", url=f'tg://user?id={admins[1]}')]])
 
 
 @bot.message_handler(commands=['start'])
 def answer(message):
-    global start_menu
-    if message.chat.id in get_ids():
-        bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста, замены определенных гласных на пробелы, выбора цвета гласных и изменения регистра букв. Для того, чтобы поставить ударение, напишите символ * после ударной гласной. Например: словома*стер', reply_markup=start_menu)
-    else:
-        bot.send_message(chat_id=message.chat.id, text=oops)
+    if is_pro(message.chat.id) == 'no':
+        bot.send_message(chat_id=message.chat.id, text=start_but_no_subscription, reply_markup=write_me)
+        return
+    if is_pro(message.chat.id) == 'expired':
+        bot.send_message(chat_id=message.chat.id, text=expired, reply_markup=write_me)
+        return
+    bot.send_message(chat_id=message.chat.id, text=main, reply_markup=start_menu)
 
+
+#ДОСТУП
+def is_pro(id):
+    info = get_info(id)
+    if info == None:
+        return "no"
+    try:
+        date = datetime.strptime(info[5], "%Y-%m-%d").date()
+        diff = (date.today() - date).days
+        if diff > info[6]:
+            return "expired"
+        else:
+            return True
+    except:
+        return "no"
+
+#ADMIN
 @bot.message_handler(commands=['admin'])
 def menu(message):
     if message.chat.id not in admins:
         bot.send_message(chat_id=message.chat.id, text="Эта команда только для админов")
         return
     markup = types.InlineKeyboardMarkup(row_width=1)
-    b1 = types.InlineKeyboardButton(text='Добавить пользователя', callback_data='add_user')
+    b1 = types.InlineKeyboardButton(text='Выдать доступ', callback_data='add_user')
     b2 = types.InlineKeyboardButton(text='Удалить кого-нибудь', callback_data='delete_user')
-    markup.add(b1, b2)
+    b3 = types.InlineKeyboardButton(text='Пробный доступ на день', callback_data='trial')
+    b4 = types.InlineKeyboardButton(text='Заработок', callback_data='money')
+    markup.add(b1, b3, b2, b4)
     bot.send_message(chat_id=message.chat.id, text='Главное меню администратора', reply_markup=markup)
 
 @bot.callback_query_handler(lambda query: query.data == 'add_user')
@@ -51,23 +75,105 @@ def ask_for_message(query):
 def ask_name(message):
     try:
         id = message.forward_from.id
-        print(id)
     except Exception as e: 
          bot.send_message(chat_id=message.chat.id, text=f'Не похоже на пересланное сообщение...\nПопробуйте снова {e}')
          menu(message)
          return
     bot.send_message(chat_id=message.chat.id, text='Как вы хотите назвать пользователя?')
-    bot.register_next_step_handler(message, add, id=id)
+    bot.register_next_step_handler(message, ask_duration, id=id)
 
-def add(message, id):
+def ask_duration(message, id):
+    name = message.text
+    bot.send_message(message.chat.id, "На сколько месяцев?")
+    bot.register_next_step_handler(message, confirm, id=id, name=name)
+
+def confirm(message, id, name):
+    months = message.text
     try:
-        add_user(id, message.text, 'normal', 'false', 'false')
-        bot.send_message(chat_id=message.chat.id, text=f'Успех! {message.text} теперь имеет доступ к боту')
-        bot.send_message(chat_id=id, text='Привет, я Словомастер, спешу сообщить, что Вам открыт доступ ко всем моим функциям. Приятного использования!', reply_markup=start_menu)
-        bot.send_message(chat_id=message.chat.id, text='Отправьте слово или несколько слов через пробел.\nВоспользуйтесь кнопками ниже, для ввода текста, замены определенных гласных на пробелы, выбора цвета гласных и изменения регистра букв. Для того, чтобы поставить ударение, напишите символ * после ударной гласной. Например: словома*стер', reply_markup=start_menu)
+        days = int(months) * 30
+    except:
+        bot.send_message(chat_id=message.chat.id, text=f'введите только число, количество месяцев на которое предоставить доступ пользователю {name}')
+        ask_name(message)
+    conf = types.InlineKeyboardMarkup([[types.InlineKeyboardButton("Верно", callback_data=f'enable_premium{id}:{name}:{days}')], 
+                                       [types.InlineKeyboardButton("Отмена", callback_data='Выход')]])
+    bot.send_message(message.chat.id, f"Подтвердите\nДоступ для {name} будет открыт на {months} мес.", reply_markup=conf)
+
+@bot.callback_query_handler(lambda query: query.data[:14] == 'enable_premium')
+def give_access(query):
+    try:
+        data = query.data[14:].split(':')
+        id = int(data[0])
+        name = data[1]
+        days = int(data[2])
+        add_premium(id, name, str(date.today()), days)
+        bot.send_message(chat_id=query.message.chat.id, text=f'Успех! {name} теперь имеет доступ к боту до {date.today()+timedelta(days=days)}')
+        bot.send_message(admins[0], f'Кто-то купил доступ на {days//30} мес. Твоя доля: {days//30*100*0.2} руб.')
+        if len(data) == 4:
+            bot.send_message(chat_id=id, text=trial_started)
+            bot.send_message(chat_id=query.message.chat.id, text=instructions, reply_markup=start_menu)
+            return
+        bot.send_message(chat_id=id, text=f'🎉🎉🎉Ура! С этой минуты и до {date.today()+timedelta(days=days)} вам открыт полный доступ к боту. Приятного использования!', reply_markup=start_menu)
+        bot.send_message(chat_id=id, text=instructions, reply_markup=start_menu)
     except Exception as e:
-        bot.send_message(chat_id=message.chat.id, text=f'Что-то не так, попробуйте еще раз. Ошибка {e}')
-        menu(message)
+        bot.send_message(chat_id=query.message.chat.id, text=f'Что-то не так, попробуйте еще раз. Ошибка {e}')
+        menu(query.message)
+
+
+@bot.callback_query_handler(lambda query: query.data == 'trial')
+def ask_for_message_trial(query):
+    bot.send_message(chat_id=query.message.chat.id, text='Отлично, теперь перешлите мне любое сообщение от пользователя, которого хотите добавить. Только так я смогу узнать его айди')
+    message = query.message
+    bot.register_next_step_handler(message, confirm_trial)
+
+def confirm_trial(message):
+    id = message.forward_from.id
+    conf = types.InlineKeyboardMarkup([[types.InlineKeyboardButton("Верно", callback_data=f'enable_premium{id}:пробный{id}:2:trial')], 
+                                       [types.InlineKeyboardButton("Отмена", callback_data='Выход')]])
+    bot.send_message(message.chat.id, f"Подтвердите:\nДоступ для ID: {id} будет открыт на 1 день", reply_markup=conf)
+
+
+#ЗАРАБОТОК
+@bot.callback_query_handler(lambda query: query.data == 'money')
+def money(query):
+    if query.message.chat.id == admins[0]:
+        users = get_infos()
+        users_new = 0
+        s = 0
+        date_last = datetime.strptime(get_date(), '%Y-%m-%d').date()
+        for info in list(users):
+            date_start = datetime.strptime(info[5], '%Y-%m-%d').date()
+            days = int(info[6])
+            if date_start > date_last and days >= 30:
+                users_new+=1
+                s += price * (days // 30)
+        bot.send_message(admins[0], f'''C {date_last} {users_new} чел. оформили подписки\nОбщий доход: {s} руб.\nТвой процент: {s*0.2} руб.''',
+                         reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton('Обнулить', callback_data='update_date')]]))
+    if query.message.chat.id == admins[1]:
+        users = get_infos()
+        users_new = 0
+        s = 0
+        date_last = datetime.strptime(get_date(), '%Y-%m-%d').date()
+        for info in list(users):
+            date_start = datetime.strptime(info[5], '%Y-%m-%d').date()
+            days = int(info[6])
+            if date_start > date_last and days >= 30:
+                users_new+=1
+                s += price * (days // 30)
+        bot.send_message(admins[1], f'''C {date_last} {users_new} чел. оформили подписки\nОбщий доход: {s} руб.\nВаш процент: {s*0.8} руб.\nВаша задолженность: {s*0.2} руб.''')
+
+#обнулить
+@bot.callback_query_handler(lambda query: query.data == 'update_date')
+def confirm_update(query):
+    bot.send_message(query.message.chat.id, 'Обнулить?',
+                     reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton("Верно", callback_data=f'update_date_confirmed')], 
+                                                              [types.InlineKeyboardButton("Отмена", callback_data='Выход')]]))
+
+@bot.callback_query_handler(lambda query: query.data == 'update_date_confirmed')
+def update_date_confirmed(query):
+    update_date(str(date.today()))
+    bot.send_message(admins[0], 'Готово')
+    bot.send_message(admins[1], 'Оплата получена, спасибо за сотрудничество')
+
 
 @bot.callback_query_handler(lambda query: query.data == 'delete_user')
 def users_list(query):
@@ -88,10 +194,12 @@ def delete(query):
     
 @bot.message_handler(commands=['text'])
 def ask_text(message):
-    if message.chat.id not in get_ids():
-        bot.send_message(chat_id=message.chat.id, text=oops)
+    if is_pro(message.chat.id) == 'no':
+        bot.send_message(chat_id=message.chat.id, text=no_subscription, reply_markup=write_me)
         return
-    global exit
+    if is_pro(message.chat.id) == 'expired':
+        bot.send_message(chat_id=message.chat.id, text=expired, reply_markup=write_me)
+        return
     global text_queue
     exit = False
     text_queue[str(message.chat.id)] = []
@@ -238,8 +346,11 @@ def red(query):
 
 @bot.message_handler(func=lambda m: True, content_types=['text'])
 def create_word(message):
-    if message.chat.id not in get_ids():
-        bot.send_message(chat_id=message.chat.id, text=oops)
+    if is_pro(message.chat.id) == 'no':
+        bot.send_message(chat_id=message.chat.id, text=no_subscription, reply_markup=write_me)
+        return
+    if is_pro(message.chat.id) == 'expired':
+        bot.send_message(chat_id=message.chat.id, text=expired, reply_markup=write_me)
         return
     try:
         try:
@@ -279,10 +390,8 @@ def create_word(message):
 
 @bot.callback_query_handler(lambda query: query.data == 'Выход')
 def exit_func(query):
-    global start_menu
     bot.send_message(text='Возвращение в меню...', chat_id=query.message.chat.id, reply_markup=start_menu)
-    global exit
-    exit = True
+    bot.clear_step_handler(query.message)
     return
 
 @bot.callback_query_handler(lambda query: query.data == 'normal')
@@ -338,6 +447,7 @@ def f(query):
         bot.send_message(chat_id=query.message.chat.id, text="Готово!", reply_markup=start_menu)
     except:
         bot.send_message(chat_id=query.message.chat.id, text="Что-то не так с базой данных!", reply_markup=start_menu)
+
 
 
 @server.route('/' + '5514371847:AAHyXwFZWL4Ak_EEXFa6CigjYGQFqquaCqI', methods=['POST'])
