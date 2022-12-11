@@ -277,7 +277,7 @@ def word(word, id):
                 chars.append(img)
                 continue
 
-                
+"""                
     word_prev = word
     word = ''
     for b in word_prev:
@@ -285,13 +285,15 @@ def word(word, id):
             word += "_"
         else:
             word += b
-    print(word)
+    print(word)"""
     
     bg = Image.new('RGB', (width_total, 800), 'white')
     x = 40
     index = 0
     for img in chars:
-        if word[index] == 'Ё':
+        if word[index] in excluded or word[index].lower() in excluded:
+            bg.paste(img, (x, 490))
+        elif word[index] == 'Ё':
             bg.paste(img, (x, 220))
         elif word[index] == 'ё':
             bg.paste(img, (x, 265))
@@ -304,8 +306,6 @@ def word(word, id):
         elif word[index] == 'ф':
             bg.paste(img, (x, 275))
         elif word[index] == '.':
-            bg.paste(img, (x, 490))
-        elif word[index] in excluded or word[index].lower() in excluded:
             bg.paste(img, (x, 490))
         elif word[index] == "*":
             bg.paste(img, (x - widths[index-1] // 2 - 74, accent_y))
