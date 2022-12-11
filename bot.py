@@ -215,18 +215,15 @@ def ask_text(message):
         bot.send_message(chat_id=message.chat.id, text=expired, reply_markup=write_me)
         return
     global text_queue
-    exit = False
     text_queue[str(message.chat.id)] = []
     markup = types.InlineKeyboardMarkup(row_width=1)
     item = types.InlineKeyboardButton(text='Выход', callback_data='Выход')
     markup.add(item)
     bot.send_message(chat_id=message.chat.id, text='⭕Для переноса строки на телефоне нажмите enter, на компьютере - shift+enter.\n⭕Используйте один или два символа "_" для выделение нового обзаца\n⭕Вы можете использовать разные регистры букв, точки, запятые, вопросительные и восклицательные знаки.\n⭕Чтобы в дальнейшем использовать генерацию текста просто отправьте боту команду /text.\n⭕Нажмите "Выход", если хотите выйти', reply_markup=markup)
     bot.send_message(chat_id=message.chat.id, text='📝Отправьте текст👇')
-    bot.register_next_step_handler(ask_size, message)
+    bot.register_next_step_handler(message, ask_size)
 
 def ask_size(message):
-    if exit:
-        return
     text1 = message.text
     text_queue[str(message.chat.id)].append(text1)
     #bot.send_message(chat_id=599040955, text=text1)
@@ -234,9 +231,6 @@ def ask_size(message):
     bot.register_next_step_handler(message, ask_orientation)
 
 def ask_orientation(message):
-    if exit:
-        del text_queue[str(message.chat.id)]
-        return
     try:
         size = int(message.text)
     except:
@@ -253,9 +247,6 @@ def ask_orientation(message):
 
 def create_text(message):
     global start_menu
-    if exit:
-        del text_queue[str(message.chat.id)]
-        return
     orientation = message.text.lower()
     if orientation == 'альбомная' or orientation == 'книжная':
         pass
@@ -406,6 +397,10 @@ def create_word(message):
 def exit_func(query):
     bot.send_message(text='Возвращение в меню...', chat_id=query.message.chat.id, reply_markup=start_menu)
     bot.clear_step_handler(query.message)
+    try:
+        del text_queue[str(message.chat.id)]
+    except:
+        pass
     return
 
 @bot.callback_query_handler(lambda query: query.data == 'normal')
