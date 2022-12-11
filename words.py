@@ -281,7 +281,7 @@ def word(word, id):
     word_prev = word
     word = ''
     for b in word_prev:
-        if b in excluded:
+        if b.lower() in excluded:
             word += "_"
         else:
             word += b
