@@ -277,6 +277,16 @@ def word(word, id):
                 chars.append(img)
                 continue
 
+                
+    word_prev = word
+    word = ''
+    for b in word_prev:
+        if b in excluded:
+            word += "_"
+        else:
+            word += b
+    print(word)
+    
     bg = Image.new('RGB', (width_total, 800), 'white')
     x = 40
     index = 0
