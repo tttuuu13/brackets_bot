@@ -276,16 +276,6 @@ def word(word, id):
                 widths.append(width)
                 chars.append(img)
                 continue
-
-"""                
-    word_prev = word
-    word = ''
-    for b in word_prev:
-        if b.lower() in excluded:
-            word += "_"
-        else:
-            word += b
-    print(word)"""
     
     bg = Image.new('RGB', (width_total, 800), 'white')
     x = 40
