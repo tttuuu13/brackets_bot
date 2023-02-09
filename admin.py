@@ -2,8 +2,8 @@ import psycopg2
 import os
 
 
-#url = "postgres://kqtiwoemoxorkl:5d93e39aac86d76ad4ee78c133c3fb11c0259e3e1a5dd0969673cd6e8d38e1b1@ec2-54-76-105-132.eu-west-1.compute.amazonaws.com:5432/d6ca6cf8cn29ca"
-url = os.environ['DATABASE_URL']
+url = "postgresql://database:AVNS_A_1U7iHgpNTlBTiivCe@app-4c8a87f2-73ff-4c8a-9ca0-e9888e28550b-do-user-13531893-0.b.db.ondigitalocean.com:25060/database?sslmode=require"
+#url = os.environ['DATABASE_URL']
 price = 100
 
 def add_premium(id, name, date, days):
