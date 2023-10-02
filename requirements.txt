@@ -1,7 +1,7 @@
 ﻿Flask
 jsonschema
 numpy
-Pillow
+Pillow==9.5.0
 pyTelegramBotAPI
 requests
 psycopg2
