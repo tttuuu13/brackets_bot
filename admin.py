@@ -2,7 +2,7 @@ import psycopg2
 import os
 
 
-url = "postgresql://database:AVNS_A_1U7iHgpNTlBTiivCe@app-4c8a87f2-73ff-4c8a-9ca0-e9888e28550b-do-user-13531893-0.b.db.ondigitalocean.com:25060/database?sslmode=require"
+url = "postgresql://database:AVNS_Qy8TbQaqiB_4z2ORPZm@app-4c8a87f2-73ff-4c8a-9ca0-e9888e28550b-do-user-13531893-0.b.db.ondigitalocean.com:25060/database?sslmode=require"
 #url = os.environ['DATABASE_URL']
 price = 100
 
