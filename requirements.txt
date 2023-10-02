@@ -1,6 +1,6 @@
 ﻿Flask==2.0.2
 jsonschema==4.0.1
-numpy==1.21.2
+numpy
 Pillow==8.3.2
 pyTelegramBotAPI
 requests==2.26.0
