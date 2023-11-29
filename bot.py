@@ -39,6 +39,8 @@ def answer(message):
 
 #ДОСТУП
 def is_pro(id):
+    if id == admins[1]:
+        return True
     info = get_info(id)
     if info == None:
         return "no"
