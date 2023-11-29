@@ -182,7 +182,7 @@ def users_list(query):
     users = []
     infos = get_infos()
     for info in infos:
-        if info[0] in admins:
+        if info[0] == admins[1]:
             continue
         date = datetime.strptime(info[5], "%Y-%m-%d").date()
         diff = (date.today() - date).days
