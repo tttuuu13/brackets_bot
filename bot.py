@@ -62,8 +62,7 @@ def menu(message):
     b1 = types.InlineKeyboardButton(text='Выдать доступ', callback_data='add_user')
     b2 = types.InlineKeyboardButton(text='Удалить кого-нибудь', callback_data='delete_user')
     b3 = types.InlineKeyboardButton(text='Пробный доступ на день', callback_data='trial')
-    b4 = types.InlineKeyboardButton(text='Заработок', callback_data='money')
-    markup.add(b1, b3, b2, b4)
+    markup.add(b1, b3, b2)
     bot.send_message(chat_id=message.chat.id, text='Главное меню администратора', reply_markup=markup)
 
 @bot.callback_query_handler(lambda query: query.data == 'add_user')
