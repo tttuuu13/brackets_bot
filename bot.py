@@ -68,9 +68,6 @@ def menu(message):
 
 @bot.callback_query_handler(lambda query: query.data == 'add_user')
 def ask_for_message(query):
-    if str(date.today()) == get_date():
-        bot.send_message(query.message.chat.id, 'К сожалению нельзя добавить пользователя в день оплаты, попробуйте завтра')
-        return
     bot.send_message(chat_id=query.message.chat.id, text='Отлично, теперь перешлите мне любое сообщение от пользователя, которого хотите добавить. Только так я смогу узнать его айди')
     message = query.message
     bot.register_next_step_handler(message, ask_name)
