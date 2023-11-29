@@ -212,7 +212,7 @@ def ask_text(message):
     if is_pro(message.chat.id) == 'expired':
         bot.send_message(chat_id=message.chat.id, text=expired, reply_markup=write_me)
         return
-    global text_queue
+    global text_queue = {}
     text_queue[str(message.chat.id)] = []
     markup = types.InlineKeyboardMarkup(row_width=1)
     item = types.InlineKeyboardButton(text='Выход', callback_data='Выход')
