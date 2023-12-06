@@ -2,8 +2,8 @@ import psycopg2
 import os
 
 
-url = "postgres://jrqldxhxhgiblz:12b1e23556a5f16aab4d30bb704f13b1877c663ed639a7400362ae7cb3581ef9@ec2-52-50-90-145.eu-west-1.compute.amazonaws.com:5432/d5tl7oq88soio"
-#url = os.environ['DATABASE_URL']
+#url = "postgres://jrqldxhxhgiblz:12b1e23556a5f16aab4d30bb704f13b1877c663ed639a7400362ae7cb3581ef9@ec2-52-50-90-145.eu-west-1.compute.amazonaws.com:5432/d5tl7oq88soio"
+url = os.environ['DATABASE_URL']
 price = 100
 
 def add_premium(id, name, date, days):
