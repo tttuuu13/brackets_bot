@@ -39,8 +39,6 @@ def answer(message):
 
 #ДОСТУП
 def is_pro(id):
-    if id == admins[1]:
-        return True
     info = get_info(id)
     if info == None:
         return "no"
@@ -76,9 +74,6 @@ def ask_for_message(query):
 def ask_name(message):
     try:
         id = message.forward_from.id
-        if id == admins[1]:
-            bot.send_message(message.chat.id, 'У вас уже есть вечный доступ)')
-            return
     except Exception as e: 
          bot.send_message(chat_id=message.chat.id, text=f'Не похоже на пересланное сообщение...\nПопробуйте снова {e}')
          menu(message)
